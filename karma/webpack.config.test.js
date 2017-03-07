@@ -19,7 +19,7 @@ module.exports = {
         test: /\.(js|jsx)$/,
         use: [
           {
-            loader: 'isparta-loader',
+            loader: 'istanbul-instrumenter-loader',
             enforce: 'pre',
             include: [srcPath]
           },
