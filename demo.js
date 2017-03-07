@@ -1,3 +1,8 @@
-import Style from './Style';
+// import {Base, Style} from './main';
 
-module.exports = new Style().toWebpack();
+const webpackConfig = require('./main');
+
+const Base = webpackConfig.Base;
+// const Style = webpackConfig.Style;
+console.log(Base);
+// console.log(Style);
