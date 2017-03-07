@@ -1,0 +1,4 @@
+
+rules:
+  selector-no-id: true
+  string-quotes: "double"

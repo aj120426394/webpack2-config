@@ -1,0 +1,11 @@
+{
+    "presets": [
+      ["es2015", { "modules": false }],
+      "stage-0"
+    ],
+    "plugins": [
+      "transform-runtime",
+      "transform-object-rest-spread",
+      "transform-es2015-shorthand-properties"
+    ]
+}

@@ -1,0 +1,38 @@
+extends:
+  - "airbnb"
+
+parser: "babel-eslint"
+
+env:
+  browser: true
+  mocha: true
+  node: true
+  es6: true
+
+globals:
+  __DEV_TOOLS__: true
+
+rules:
+  new-cap: "off"
+  valid-jsdoc: "error"
+  react/jsx-uses-react: "error"
+  react/jsx-uses-vars: "error"
+  react/react-in-jsx-scope: "error"
+  react/jsx-indent: "off"
+  react/prefer-stateless-function: "off"
+
+  no-var: "off"
+  vars-on-top: "off"
+  max-len: "off"
+
+  comma-dangle: "off"
+  id-length: "off"
+
+  indent:
+    - "error"
+    - 2
+    - SwitchCase: 1
+
+
+plugins:
+  - "react"
