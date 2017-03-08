@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 module.exports = {
   context: './app',
   entry: {
@@ -84,6 +85,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './index.html'
     }),
-    null
+    new webpack.NamedModulesPlugin()
   ]
 };

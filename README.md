@@ -1,5 +1,5 @@
 
-# [Webpack2 configuration](https://github.com/aj120426394/webpack2-config)
+# [Webpack2 configuration](https://github.com/aj120426394/webpack2-config) [![Build Status](https://travis-ci.org/aj120426394/webpack2-config.svg?branch=master)](https://travis-ci.org/aj120426394/webpack2-config) [![NPM Version](https://img.shields.io/npm/v/webpack2-general-config.svg)](https://www.npmjs.com/package/webpack2-general-config)
 
 *This is the configuration module for webpack2*
 

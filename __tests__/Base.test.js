@@ -36,17 +36,17 @@ describe("Prod configuration", () =>{
   test("Default", () => {
     expect(base.prodConfig).toMatchObject(defaultSetting);
   });
-
-  test("Add Extract Style", () => {
-    const cssConfig = {
-      filter: '',
-      path: [],
-      extraResources: EXTRA_SCSS_RESOURCES
-    };
-    base.addStyleConfig({
-      config: cssConfig
-    });
-    expect(base.prodConfig).toMatchObject(defaultStyleSetting);
-  })
+  //
+  // test("Add Extract Style", () => {
+  //   const cssConfig = {
+  //     filter: '',
+  //     path: [],
+  //     extraResources: EXTRA_SCSS_RESOURCES
+  //   };
+  //   base.addStyleConfig({
+  //     config: cssConfig
+  //   });
+  //   expect(base.prodConfig).toMatchObject(defaultStyleSetting);
+  // })
 });
 

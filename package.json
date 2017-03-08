@@ -1,9 +1,9 @@
 {
-  "name": "webpack2-genral-config",
+  "name": "webpack2-general-config",
   "version": "1.0.0",
   "description": "This is a webpack2 configuration for gerneral purpose.",
   "main": "main.js",
-  "directories": "webpack",
+  "directories": "/webpack",
   "scripts": {
     "start": "node server.js",
     "dev": "webpack-dev-server --config webpack.config.babel.js --progress --colors",
@@ -11,7 +11,6 @@
     "build:dev": "webpack",
     "test": "npm run test:lint",
     "test:jest": "jest",
-    "test:karma": "karma start --autoWatch=true --singleRun=false",
     "test:lint": "npm run test:lint:js && npm run test:lint:scss",
     "test:lint:js": "eslint --config=\"./.eslintrc.yml\" ./app/**/*.jsx",
     "test:lint:scss": "stylelint \"./app/scss/components/*.scss\" --allow-empty-input",
