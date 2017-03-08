@@ -149,4 +149,4 @@ module.exports = class Util{
       ]
     };
   };
-}
+};

@@ -101,7 +101,6 @@ const webpackConfig = new Base({
   htmlPath: './index.html'
 });
 
-const styleConfig = new Style();
 const cssConfig = {
   filter: '',
   path: [],
@@ -110,7 +109,7 @@ const cssConfig = {
 
 
 webpackConfig.addStyleConfig({
-  config: styleConfig.extractSCSStoCSS(cssConfig)
+  cssConfig: cssConfig
 });
 
 
@@ -140,7 +139,7 @@ const base = function(env) {
 let config;
 switch (process.env.npm_lifecycle_event) {
   case 'build:prod':
-    config = webpackConfig.buildForProduction();
+    config = webpackConfig.buildForProduction(['jquery']);
     break;
   case 'build:dev':
     config = merge(
@@ -151,9 +150,7 @@ switch (process.env.npm_lifecycle_event) {
     );
     break;
   default:
-
-    config = webpackConfig.devWithDevServer();
-    console.log(config);
+    config = webpackConfig.buildForDevServer();
 }
 
 module.exports = config;

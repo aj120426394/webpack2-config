@@ -21,23 +21,24 @@ module.exports = class Base{
     this.htmlWebpack = new HtmlWebpackPlugin({
       template: htmlPath
     });
+
     this.devConfig = this.initialization('development');
     this.prodConfig = this.initialization('production');
   }
 
-  initialization( env = 'development' ){
-    const entry = Object.assign({}, this.entry);
+  initialization( env='development'){
+    const entries = JSON.parse(JSON.stringify(this.entry));
 
     if (env === 'development') {
-      Object.keys(entry).forEach((key) => {
-        entry[key].unshift('webpack/hot/only-dev-server');
-        entry[key].unshift(`webpack-dev-server/client?http://localhost:${this.devServerPort}`);
+      Object.keys(entries).forEach((key) => {
+        entries[key].unshift('webpack/hot/only-dev-server');
+        entries[key].unshift(`webpack-dev-server/client?http://localhost:${this.devServerPort}`);
       });
     }
 
     return ({
       context: this.context,
-      entry: entry,
+      entry: entries,
       output: {
         path: this.outputPath,
         publicPath: env === 'development' ? '/' : this.publicPath,
@@ -114,23 +115,29 @@ module.exports = class Base{
       plugins: [
         this.htmlWebpack,
         // (env === 'development' ? hotModuleReplacement : null),
-        (env === 'development' ? new webpack.NamedModulesPlugin() : null)
+        new webpack.NamedModulesPlugin()
       ]
     });
   }
 
   addStyleConfig({ cssConfig , prefixWrap }) {
-    const style = new Style(prefixWrap);
-    const devConfig = Object.assign({}, cssConfig);
+    let style;
+    if (prefixWrap || prefixWrap !== '' ) {
+      style = new Style(prefixWrap);
+    } else {
+      style = new Style(prefixWrap);
+    }
+
+    const devConfig = JSON.parse(JSON.stringify(cssConfig));
     devConfig['env'] = 'development';
-    const prodConfig = Object.assign({}, cssConfig);
+    const prodConfig = JSON.parse(JSON.stringify(cssConfig));
     prodConfig['env'] = 'production';
 
     this.devConfig = merge(this.devConfig, style.inlineSCSStoCSS(devConfig));
     this.prodConfig = merge(this.prodConfig, style.extractSCSStoCSS(prodConfig));
   }
 
-  buildForProduction(){
+  buildForProduction(extractLibrary=[]){
     const config = merge(
       this.prodConfig,
       Util.clean(this.outputPath),
@@ -139,7 +146,7 @@ module.exports = class Base{
       }),
       Util.extractJSBundle({
         name: 'vendor',
-        entries: ['jquery']
+        entries: extractLibrary
       }),
       Util.optimize()
     );
@@ -156,7 +163,7 @@ module.exports = class Base{
     return config;
   }
 
-  devWithDevServer() {
+  buildForDevServer() {
     const config = merge(
       this.devConfig,
       {
@@ -169,4 +176,4 @@ module.exports = class Base{
     );
     return config;
   }
-}
+};

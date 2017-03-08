@@ -151,7 +151,7 @@ module.exports = class Style {
    * @param {Array} extraResources -The array of the paths of the external resource you want to include.
    * @returns {{module: {rules: [*,*]}, plugins: [*]}}
    */
-  extractSCSStoCSS({env = 'development', filter = '', path, extraResources = []}) {
+  extractSCSStoCSS({env = 'development', filter = '', path = [], extraResources = []}) {
     const extractCSS = new ExtractTextPlugin('[name].[chunkhash].css');
     let scssLoader;
     const loaders = [
@@ -238,7 +238,7 @@ module.exports = class Style {
    * @param {Array} sassResource -The sass resource that will attach to all your scss module. ex. variable.scss
    * @returns {{module: {loaders: [*,*]}, sassLoader: {env: *, includePaths: *}, sassResources: *, plugins: [*]}}
    */
-  SCSStoCSSModule({env = 'development', filter = '', path, extraResources = [], sassResource = []}) {
+  SCSStoCSSModule({env = 'development', filter = '', path = [], extraResources = [], sassResource = []}) {
     // Sass loader setting for css module:
     const extractCSS = new ExtractTextPlugin('[name].[chunkhash].css');
     const inline = [
