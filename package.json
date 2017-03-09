@@ -21,6 +21,7 @@
     "webpack2",
     "config"
   ],
+  "repository": "https://github.com/aj120426394/webpack2-config",
   "author": "Jafo Teng",
   "license": "ISC",
   "dependencies": {
