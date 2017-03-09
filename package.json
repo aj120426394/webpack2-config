@@ -1,6 +1,6 @@
 {
   "name": "webpack2-general-config",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This is a webpack2 configuration for gerneral purpose.",
   "main": "main.js",
   "directories": "/webpack",

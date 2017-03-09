@@ -138,18 +138,24 @@ module.exports = class Base{
   }
 
   buildForProduction(extractLibrary=[]){
-    const config = merge(
+    let config = merge(
       this.prodConfig,
       Util.clean(this.outputPath),
       Util.setEnvironmentVariable({
         NODE_ENV: 'production'
       }),
-      Util.extractJSBundle({
-        name: 'vendor',
-        entries: extractLibrary
-      }),
       Util.optimize()
     );
+
+    if(extractLibrary.length !== 0) {
+      config = merge(
+        config,
+        Util.extractJSBundle({
+          name: 'vendor',
+          entries: extractLibrary
+        }),
+      );
+    }
     return config;
   }
 
