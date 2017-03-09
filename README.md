@@ -19,7 +19,7 @@
 2\. Install application dependencies.
 
 ```bash
-npm install wepack2-general-config
+npm install webpack2-general-config
 ```
 
 3\. Import the module into your webpack configuration file.
