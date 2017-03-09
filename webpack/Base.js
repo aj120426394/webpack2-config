@@ -153,7 +153,7 @@ module.exports = class Base{
         Util.extractJSBundle({
           name: 'vendor',
           entries: extractLibrary
-        }),
+        })
       );
     }
     return config;
