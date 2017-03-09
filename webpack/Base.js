@@ -41,7 +41,7 @@ module.exports = class Base{
       entry: entries,
       output: {
         path: this.outputPath,
-        publicPath: env === 'development' ? '/' : this.publicPath,
+        publicPath: env === 'development' ? `http://localhost:${this.devServerPort}` : this.publicPath,
         filename: '[name].[hash].js',
         chunkFilename: '[name].[chunkhash:8].js'
       },
