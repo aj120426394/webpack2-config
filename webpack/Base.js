@@ -144,6 +144,10 @@ module.exports = class Base{
       Util.setEnvironmentVariable({
         NODE_ENV: 'production'
       }),
+      Util.extractJSBundle({
+        name: 'vendor',
+        entries: extractLibrary
+      }),
       Util.optimize()
     );
 
