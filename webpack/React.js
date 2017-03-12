@@ -1,8 +1,3 @@
-// import webpack from 'webpack';
-// import merge from 'webpack-merge';
-// import HtmlWebpackPlugin from 'html-webpack-plugin';
-// import Util from 'Util';
-
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -10,7 +5,7 @@ const Util = require('./Util');
 const Style = require('./Style');
 const Lint = require('./Lint');
 
-module.exports = class Base{
+module.exports = class React{
   constructor({ context, entry, outputPath, publicPath, alias, devServerPort = 8100, htmlPath = './index.html' }){
     this.context = context;
     this.entry = entry;
@@ -33,6 +28,7 @@ module.exports = class Base{
       Object.keys(entries).forEach((key) => {
         entries[key].unshift('webpack/hot/only-dev-server');
         entries[key].unshift(`webpack-dev-server/client?http://localhost:${this.devServerPort}`);
+        entries[key].unshift('react-hot-loader/patch');
       });
     }
 
@@ -120,32 +116,27 @@ module.exports = class Base{
     });
   }
 
-  addStyleConfig({ cssConfig , prefixWrap }) {
-    let style;
-    if (prefixWrap || prefixWrap !== '' ) {
-      style = new Style(prefixWrap);
-    } else {
-      style = new Style();
-    }
+  addExtractStyleConfig({ cssConfig }) {
+    const style = new Style();
 
     const devConfig = JSON.parse(JSON.stringify(cssConfig));
     devConfig['env'] = 'development';
     const prodConfig = JSON.parse(JSON.stringify(cssConfig));
     prodConfig['env'] = 'production';
 
-    this.devConfig = merge(this.devConfig, style.inlineSCSStoCSS(devConfig));
+    this.devConfig = merge(this.devConfig, style.extractSCSStoCSS(devConfig));
     this.prodConfig = merge(this.prodConfig, style.extractSCSStoCSS(prodConfig));
   }
 
-  addConfig ({ config = {}, env='' }) {
-    if (env === 'development') {
-      this.devConfig = merge(this.devConfig, config);
-    } else if (env === 'production') {
-      this.prodConfig = merge(this.prodConfig, config);
-    } else {
-      this.devConfig = merge(this.devConfig, config);
-      this.prodConfig = merge(this.prodConfig, config);
-    }
+  addModuleStyleConfig({ cssConfig }) {
+    const style = new Style();
+    const devConfig = JSON.parse(JSON.stringify(cssConfig));
+    devConfig['env'] = 'development';
+    const prodConfig = JSON.parse(JSON.stringify(cssConfig));
+    prodConfig['env'] = 'production';
+
+    this.devConfig = merge(this.devConfig, style.SCSStoCSSModule(devConfig));
+    this.prodConfig = merge(this.prodConfig, style.SCSStoCSSModule(prodConfig));
   }
 
   buildForProduction(extractLibrary=[]){

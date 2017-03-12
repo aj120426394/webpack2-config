@@ -149,10 +149,11 @@ module.exports = class Style {
    * @param {String} filter -The flag to control it's "exclude" or "include" the path.
    * @param {Array} path -The regular expression of exclude path.
    * @param {Array} extraResources -The array of the paths of the external resource you want to include.
+   * @param {Boolean} vendors -The flag to control if this is extract for vendors.
    * @returns {{module: {rules: [*,*]}, plugins: [*]}}
    */
-  extractSCSStoCSS({env = 'development', filter = '', path = [], extraResources = []}) {
-    const extractCSS = new ExtractTextPlugin('[name].[chunkhash].css');
+  extractSCSStoCSS({env = 'production', filter = '', path = [], extraResources = [], vendors = false}) {
+    const extractCSS = vendors ?  new ExtractTextPlugin('vendors.[chunkhash].css') : new ExtractTextPlugin('[name].[chunkhash].css');
     let scssLoader;
     const loaders = [
       {
