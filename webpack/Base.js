@@ -121,12 +121,9 @@ module.exports = class Base{
   }
 
   addStyleConfig({ cssConfig , prefixWrap }) {
-    let style;
-    if (prefixWrap || prefixWrap !== '' ) {
-      style = new Style(prefixWrap);
-    } else {
-      style = new Style();
-    }
+
+    const style = new Style(prefixWrap);
+
 
     const devConfig = JSON.parse(JSON.stringify(cssConfig));
     devConfig['env'] = 'development';

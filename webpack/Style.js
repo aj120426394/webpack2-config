@@ -70,6 +70,12 @@ module.exports = class Style {
   }
 
 
+  static createInlineSCSStoCSSConfig ({ prefixWrap = '', cssConfig = {} }) {
+    const style = new Style(prefixWrap);
+    return style.inlineSCSStoCSS(cssConfig);
+  }
+
+
   /**
    * Creating the configuration of converting SCSS to inline css.
    * @param {String} env -The controller of dev / prod mode.
@@ -142,6 +148,10 @@ module.exports = class Style {
     });
   };
 
+  static createExtractSCSStoCSSConfig({prefixWrap = '', cssConfig = {}}) {
+    const style = new Style(prefixWrap);
+    return style.extractSCSStoCSS(cssConfig);
+  }
 
   /**
    * Creating the configuration of converting SCSS to extract css.

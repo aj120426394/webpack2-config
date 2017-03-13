@@ -139,6 +139,17 @@ module.exports = class React{
     this.prodConfig = merge(this.prodConfig, style.SCSStoCSSModule(prodConfig));
   }
 
+  addConfig ({ config = {}, env='' }) {
+    if (env === 'development') {
+      this.devConfig = merge(this.devConfig, config);
+    } else if (env === 'production') {
+      this.prodConfig = merge(this.prodConfig, config);
+    } else {
+      this.devConfig = merge(this.devConfig, config);
+      this.prodConfig = merge(this.prodConfig, config);
+    }
+  }
+
   buildForProduction(extractLibrary=[]){
     let config = merge(
       this.prodConfig,
