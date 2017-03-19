@@ -30,7 +30,7 @@ const webpack2Config = require('webpack2-genral-config');
 
 4\. To use the default settings, initialize the config first. Then there will be 3 different modes of output.
 ```javascript
-const base = new webpack2Config.Base({
+const example = new webpack2Config.Base({
   context: '',
   entry: {},
   outputPath: '',
@@ -50,9 +50,9 @@ const base = new webpack2Config.Base({
 
 5\. After initialized the configuration, you can have the config output with 3 different modes.
 ```javascript
-const prodConfig = base.buildForProduction();
-const devConfig = base.buildForDevelopment(['jquery']);
-const devServerConfig = base.buildForDevServer();
+const prodConfig = example.buildForProduction();
+const devConfig = example.buildForDevelopment(['jquery']);
+const devServerConfig = example.buildForDevServer();
 ```
 * `buildForProduction([lib_name])`: The configuration for production which include:  
     * *Remove Package*
@@ -66,7 +66,7 @@ const devServerConfig = base.buildForDevServer();
     * *inline Sourcemap*
     * *Hot module replacement*
     
-6\. `addStyleConfig()`: The initialized configuration does not include style `.sass .scss .css`. But you can use this function to add the style configuration.
+6\. `addStyleConfig()`: The initialized configuration does not include bundling `.sass .scss .css`. But you can use this function to add the style configuration.
  > **Execute this function before execute `buildForDevServer()`, `buildForDevelopment()`, `buildForProduction()`**
 ```javascript
 const cssConfig = {
@@ -77,7 +77,7 @@ const cssConfig = {
     path.resolve(__dirname, "app/vendors/materialize/sass")
   ]
 };
-base.addStyleConfig({
+example.addStyleConfig({
     cssConfig: cssConfig,
     prefixWrap: '.class-name'
 })
@@ -88,16 +88,31 @@ base.addStyleConfig({
     * `extraResources (option)`: The extra resource that you like to include when you are bundling the SCSS.
 * `prefixWrap (option)`: This is the option that can enable [postcss-prefixwrap](https://github.com/dbtedman/postcss-prefixwrap). If you don't want to enable this function, please do not provide it as parameter.
 
+7\. `addConfig()`: Add any additional settings into the configuration.
+ > **Execute this function before execute `buildForDevServer()`, `buildForDevelopment()`, `buildForProduction()`**
+ ```javascript
+const extraConfig = {
+    plugins: [
+        new webpack.ProvidePlugin({
+            $: 'jquery'
+        })
+    ]
+};
+example.addConfig(extraConfig);
+```
 
 ## Extra
 In this package it also provide some other configuration that you can use [webpack-merge](https://github.com/survivejs/webpack-merge) to merge into the default configuration. 
 
-* `webpack2-genral-config.Style`:
+* `webpack2-general-config.Style`:
     * `extractSCSStoCSS({env = 'development', filter = '', path, extraResources = []})`:
     * `inlineSCSStoCSS({env = 'development', filter = '', path = [], extraResources = []})`:
 
-* `webpack2-genral-config.Util`:
+* `webpack2-general-config.Util`:
     * `devServer({ host = 'localhost', port = 8100 })`
     * `optimize()`
     * `setEnvironmentVariable(variables)`
     * `clean (path)`
+    * `providePlugin(provide)`
+
+* `webpack2-general-config.React`:

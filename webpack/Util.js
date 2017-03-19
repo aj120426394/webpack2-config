@@ -154,4 +154,13 @@ module.exports = class Util{
       ]
     };
   };
+
+  static providePlugin( provide={} ) {
+    const providePlugin = new webpack.ProvidePlugin(provide);
+    return {
+      plugins: [
+        new providePlugin (provide)
+      ]
+    };
+  }
 };

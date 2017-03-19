@@ -6,6 +6,17 @@ const Style = require('./Style');
 const Lint = require('./Lint');
 
 module.exports = class React{
+  /**
+   * @constructor
+   *
+   * @param {String} context - The path of your source file directory.
+   * @param {Object} entry - The entry point of your project. Using an Array to wrap the entry point.
+   * @param {String} outputPath - The output path of the project.
+   * @param {String} publicPath - The public path of the project.
+   * @param {Object} alias - Alias of the webpack in your application.
+   * @param {Number} devServerPort - The port number for dev server.
+   * @param {String} htmlPath - The path of the html file of your project.
+   */
   constructor({ context, entry, outputPath, publicPath, alias, devServerPort = 8100, htmlPath = './index.html' }){
     this.context = context;
     this.entry = entry;
@@ -116,6 +127,11 @@ module.exports = class React{
     });
   }
 
+  /**
+   * Add the style config and extract it into a independent CSS file.
+   *
+   * @param {Object} cssConfig - The CSS configuration with: {filter, path, extraResources}.
+   */
   addExtractStyleConfig({ cssConfig }) {
     const style = new Style();
 
@@ -128,6 +144,11 @@ module.exports = class React{
     this.prodConfig = merge(this.prodConfig, style.extractSCSStoCSS(prodConfig));
   }
 
+  /**
+   * Add the CSS module style config.
+   *
+   * @param {Object} cssConfig - The CSS configuration with: {filter, path, extraResources}.
+   */
   addModuleStyleConfig({ cssConfig }) {
     const style = new Style();
     const devConfig = JSON.parse(JSON.stringify(cssConfig));
@@ -139,6 +160,14 @@ module.exports = class React{
     this.prodConfig = merge(this.prodConfig, style.SCSStoCSSModule(prodConfig));
   }
 
+  /**
+   * Add additional configuration into the setting.
+   *
+   * @param {Object} config - The webpack configuration format Object.
+   * @param {String} env - Set 'development' if the additional configuration only be used in development environment.
+   *                       Set 'production' if the additional configuration only be used in production environment.
+   *                       Set '' or non-provide if the additional configuration be used in any environment.
+   */
   addConfig ({ config = {}, env='' }) {
     if (env === 'development') {
       this.devConfig = merge(this.devConfig, config);
@@ -150,6 +179,12 @@ module.exports = class React{
     }
   }
 
+  /**
+   * Building the webpack configuration for production.
+   *
+   * @param {Array} extractLibrary - The set of library you want to extract to a separate js file.
+   * @returns {*}
+   */
   buildForProduction(extractLibrary=[]){
     let config = merge(
       this.prodConfig,
@@ -176,6 +211,10 @@ module.exports = class React{
     return config;
   }
 
+  /**
+   * Building webpack configuration for development
+   * @returns {*}
+   */
   buildForDevelopment(){
     const config = merge(
       this.devConfig,
@@ -186,6 +225,10 @@ module.exports = class React{
     return config;
   }
 
+  /**
+   * Building webpack configuration for dev Server.
+   * @returns {*}
+   */
   buildForDevServer() {
     const config = merge(
       this.devConfig,
