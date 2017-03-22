@@ -19,6 +19,7 @@ const will_change = require('postcss-will-change');
 const prefixerwrap = require('postcss-prefixwrap');
 const cssnano = require('cssnano');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const SpritesmithPlugin = require('webpack-spritesmith');
 
 module.exports = class Style {
   constructor(prefixerWrap = '') {
@@ -159,11 +160,11 @@ module.exports = class Style {
    * @param {String} filter -The flag to control it's "exclude" or "include" the path.
    * @param {Array} path -The regular expression of exclude path.
    * @param {Array} extraResources -The array of the paths of the external resource you want to include.
-   * @param {Boolean} vendors -The flag to control if this is extract for vendors.
+   * @param {String} fileName -The name of the extracted CSS file.
    * @returns {{module: {rules: [*,*]}, plugins: [*]}}
    */
-  extractSCSStoCSS({env = 'production', filter = '', path = [], extraResources = [], vendors = false}) {
-    const extractCSS = vendors ?  new ExtractTextPlugin('vendors.[chunkhash].css') : new ExtractTextPlugin('[name].[chunkhash].css');
+  extractSCSStoCSS({env = 'production', filter = '', path = [], extraResources = [], fileName = ''}) {
+    const extractCSS = fileName === '' ?  new ExtractTextPlugin('[name].[chunkhash].css') : new ExtractTextPlugin(`${fileName}.[chunkhash].css`);
     let scssLoader;
     const loaders = [
       {
@@ -247,11 +248,14 @@ module.exports = class Style {
    * @param {Array} path -The regular expression of exclude path.
    * @param {Array} extraResources -The array of the paths of the external resource you want to include.
    * @param {Array} sassResource -The sass resource that will attach to all your scss module. ex. variable.scss
+   * @param {String} fileName -The file name of the extracted CSS file.
    * @returns {{module: {loaders: [*,*]}, sassLoader: {env: *, includePaths: *}, sassResources: *, plugins: [*]}}
    */
-  SCSStoCSSModule({env = 'development', filter = '', path = [], extraResources = [], sassResource = []}) {
+  SCSStoCSSModule({env = 'development', filter = '', path = [], extraResources = [], sassResource = [], fileName=''}) {
     // Sass loader setting for css module:
-    const extractCSS = new ExtractTextPlugin('[name].[chunkhash].css');
+    const extractCSS = fileName === '' ?  new ExtractTextPlugin('[name].[chunkhash].css') : new ExtractTextPlugin(`${fileName}.[chunkhash].css`);
+
+    // const extractCSS = new ExtractTextPlugin('[name].[chunkhash].css');
     const inline = [
       'style-loader',
       {
@@ -358,6 +362,49 @@ module.exports = class Style {
       ]
     };
   };
-}
+
+  /**
+   * Providing the configuration of sprite with SpriteSmith
+   * @param {String} srcFolder -The image source folder that you like to make sprite with.
+   * @param {String} srcType -The image file type that your provide.
+   * @param {String} targetImgFolder -The directory that you like to save the sprite image output.
+   * @param {String} targetSCSSFolder -The director that you like to save the sprite scss output.
+   * @param {String} cssImageRef -The relative path from scss file to the image output file.
+   * @returns {{plugins: [*]}}
+   *
+   * @example
+   * Style.addSprite({
+   *  srcFolder: path.resolve(__dirname, 'app/assets/images/icon'),
+   *  srcType: '*.png',
+   *  targetImgFile: path.resolve(__dirname, 'app/assets/images/sprite.png'),
+   *  targetSCSSFile: path.resolve(__dirname, 'app/scss/abstracts/_sprite.scss'),
+   *  cssImageRef: '../asset/images/sprite.png'
+   * })
+   */
+  static addSprite({ srcFolder, srcType='*.png', targetImgFolder, targetSCSSFolder, cssImageRef}) {
+    const spritesmith = new SpritesmithPlugin({
+      src: {
+        cwd: srcFolder,
+        glob: srcType
+      },
+      target: {
+        image: targetImgFolder,
+        css: [
+          [targetSCSSFolder, {
+            format: 'scss'
+          }]
+        ]
+      },
+      apiOptions: {
+        cssImageRef: cssImageRef
+      }
+    });
+    return {
+      plugins: [
+        spritesmith
+      ]
+    }
+  }
+};
 
 

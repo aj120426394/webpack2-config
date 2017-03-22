@@ -61,7 +61,8 @@
     "url-loader": "^0.5.7",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.2.0",
-    "webpack-merge": "^3.0.0"
+    "webpack-merge": "^3.0.0",
+    "webpack-spritesmith": "^0.3.3"
   },
   "devDependencies": {
     "eslint": "^3.2.2",
@@ -73,8 +74,14 @@
     "stylelint": "^7.9.0"
   },
   "jest": {
-    "testMatch": ["**/__tests__/**/*.test.js?(x)"],
+    "testMatch": [
+      "**/__tests__/**/*.test.js?(x)"
+    ],
     "collectCoverage": true,
-    "collectCoverageFrom": ["**/webpack/**/*.js?(x)", "!**/node_modules/**", "!**/vendor/**"]
+    "collectCoverageFrom": [
+      "**/webpack/**/*.js?(x)",
+      "!**/node_modules/**",
+      "!**/vendor/**"
+    ]
   }
 }
