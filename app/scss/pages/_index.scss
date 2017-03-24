@@ -1,3 +1,9 @@
 .background {
   background-color: red;
+  font-family: $griffith-heading;
+  color: green;
+}
+.hello{
+  color: color('red','base');
+  background-image: url('/../../assets/images/BITHM_Icon_Book.png');
 }

@@ -1,6 +1,7 @@
 $roboto-font-path: '../assets/fonts/roboto/';
+$fa-font-path: '../assets/fonts';
 
 @import "font-awesome/font-awesome";
-@import "materialize";
+@import "../../vendors/materialize/sass/materialize";
 
 
