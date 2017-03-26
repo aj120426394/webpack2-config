@@ -36,7 +36,7 @@
     "babel-preset-stage-0": "^6.22.0",
     "bower-webpack-plugin": "^0.1.9",
     "clean-webpack-plugin": "^0.1.10",
-    "css-loader": "^0.26.2",
+    "css-loader": "^0.14.5",
     "cssnano": "^3.7.3",
     "eslint-loader": "^1.6.1",
     "extract-text-webpack-plugin": "^2.0.0",
@@ -64,8 +64,8 @@
     "webpack-spritesmith": "^0.3.3"
   },
   "devDependencies": {
+    "bootstrap-sass": "^3.3.7",
     "compass-mixins": "^0.12.10",
-    "css-loader": "^0.14.5",
     "eslint": "^3.2.2",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-import": "^2.2.0",

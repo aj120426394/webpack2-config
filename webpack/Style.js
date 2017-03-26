@@ -70,8 +70,60 @@ module.exports = class Style {
     };
   }
 
+  creatPostCSSLoader(env = 'development', prefixerWrap = '') {
+    const postCSSPlugins = [
+      cssnext({
+        browsers: [
+          "Android >= 2.3",
+          "BlackBerry >= 7",
+          "Chrome >= 9",
+          "Firefox >= 4",
+          "Explorer >= 9",
+          "iOS >= 5",
+          "Opera >= 11",
+          "Safari >= 5",
+          "OperaMobile >= 11",
+          "OperaMini >= 6",
+          "ChromeAndroid >= 9",
+          "FirefoxAndroid >= 4",
+          "ExplorerMobile >= 9"
+        ]
+      }),
+      flexibility,
+      will_change,
+      color_rgba_fallback,
+      opacity,
+      pseudoelements,
+      sorting
+    ];
 
-  static createInlineSCSStoCSSConfig ({ prefixWrap = '', cssConfig = {} }) {
+    if (env === 'development') {
+      const index = postCSSPlugins.indexOf(flexibility);
+      postCSSPlugins.splice(index, 0, cssnano({
+        // 关闭cssnano的autoprefixer选项，不然会和前面的autoprefixer冲突
+        autoprefixer: false,
+        reduceIdents: false,
+        zindex: false,
+        discardUnused: false,
+        mergeIdents: false
+      }));
+    }
+
+    if (prefixerWrap !== '') {
+      postCSSPlugins.splice(1, 0, prefixerwrap(prefixerWrap));
+    }
+
+
+    return {
+      loader: 'postcss-loader',
+      options: {
+        plugins: () => postCSSPlugins
+      }
+    };
+  }
+
+
+  static createInlineSCSStoCSSConfig({prefixWrap = '', cssConfig = {}}) {
     const style = new Style(prefixWrap);
     return style.inlineSCSStoCSS(cssConfig);
   }
@@ -83,9 +135,12 @@ module.exports = class Style {
    * @param {String} filter -The flag to control it's "exclude" or "include" the path.
    * @param {Array} path -The regular expression of exclude path.
    * @param {Array} extraResources -The array of the paths of the external resource you want to include.
+   * @param {String} prefixWrap -The prefix for each element in CSS.
    * @returns {{module: {rules: [*,*]}}}
    */
-  inlineSCSStoCSS({env = 'development', filter = '', path, extraResources = []}) {
+
+  inlineSCSStoCSS({env = 'development', filter = '', path, extraResources = [], prefixWrap=''}) {
+    const postCssLoader = this.creatPostCSSLoader(env, prefixWrap);
     let scssLoader;
     const loaders = [
       {
@@ -97,14 +152,20 @@ module.exports = class Style {
           sourceMap: env === 'development'
         }
       },
-      this.postCssLoader,
+      postCssLoader,
       {
-        loader: 'sass-loader',
-        options: {
-          sourceMap: env === 'development',
-          includePaths: extraResources
-        }
+        loader: 'fast-sass-loader'
       }
+      // {
+      //   loader: 'resolve-url-loader'
+      // },
+      // {
+      //   loader: 'sass-loader',
+      //   options: {
+      //     sourceMap: env === 'development',
+      //     includePaths: extraResources
+      //   }
+      // }
     ];
     if (filter === 'exclude') {
       scssLoader = {
@@ -163,8 +224,9 @@ module.exports = class Style {
    * @param {String} fileName -The name of the extracted CSS file.
    * @returns {{module: {rules: [*,*]}, plugins: [*]}}
    */
-  extractSCSStoCSS({env = 'production', filter = '', path = [], extraResources = [], fileName = ''}) {
-    const extractCSS = fileName === '' ?  new ExtractTextPlugin('[name].[chunkhash].css') : new ExtractTextPlugin(`${fileName}.[chunkhash].css`);
+  extractSCSStoCSS({env = 'production', filter = '', path = [], extraResources = [], fileName = '', prefixWrap=''}) {
+    const postCssLoader = this.creatPostCSSLoader(env, prefixWrap);
+    const extractCSS = fileName === '' ? new ExtractTextPlugin('[name].[chunkhash].css') : new ExtractTextPlugin(`${fileName}.[chunkhash].css`);
     let scssLoader;
     const loaders = [
       {
@@ -173,11 +235,17 @@ module.exports = class Style {
           sourceMap: env === 'development'
         }
       },
-      this.postCssLoader,
+      postCssLoader,
+      // {
+      //   loader: 'fast-sass-loader'
+      // }
+      {
+        loader: 'resolve-url-loader'
+      },
       {
         loader: 'sass-loader',
         options: {
-          sourceMap: env === 'development',
+          sourceMap: true,
           includePaths: extraResources
         }
       }
@@ -251,9 +319,10 @@ module.exports = class Style {
    * @param {String} fileName -The file name of the extracted CSS file.
    * @returns {{module: {loaders: [*,*]}, sassLoader: {env: *, includePaths: *}, sassResources: *, plugins: [*]}}
    */
-  SCSStoCSSModule({env = 'development', filter = '', path = [], extraResources = [], sassResource = [], fileName=''}) {
+  SCSStoCSSModule({env = 'development', filter = '', path = [], extraResources = [], sassResource = [], fileName = ''}) {
+    const postCssLoader = this.creatPostCSSLoader(env);
     // Sass loader setting for css module:
-    const extractCSS = fileName === '' ?  new ExtractTextPlugin('[name].[chunkhash].css') : new ExtractTextPlugin(`${fileName}.[chunkhash].css`);
+    const extractCSS = fileName === '' ? new ExtractTextPlugin('[name].[chunkhash].css') : new ExtractTextPlugin(`${fileName}.[chunkhash].css`);
 
     // const extractCSS = new ExtractTextPlugin('[name].[chunkhash].css');
     const inline = [
@@ -267,7 +336,7 @@ module.exports = class Style {
           localIdentName: '[name]__[local]___[hash:base64:5]'
         }
       },
-      this.postCssLoader,
+      postCssLoader,
       {
         loader: 'sass-loader',
         options: {
@@ -381,7 +450,7 @@ module.exports = class Style {
    *  cssImageRef: '../asset/images/sprite.png'
    * })
    */
-  static addSprite({ srcFolder, srcType='*.png', targetImgFolder, targetSCSSFolder, cssImageRef}) {
+  static addSprite({srcFolder, srcType = '*.png', targetImgFolder, targetSCSSFolder, cssImageRef}) {
     const spritesmith = new SpritesmithPlugin({
       src: {
         cwd: srcFolder,

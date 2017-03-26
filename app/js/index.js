@@ -1,7 +1,7 @@
 // require("../scss/vendors/fontawesome.scss");
 // require("../scss/vendors/_index.scss");
 require("../scss/app.scss");
-
+// require("../assets/images/BITHM_Icon_Book.png");
 
 if (process.env.NODE_ENV !== 'production') {
   require('../index.html');
