@@ -70,7 +70,7 @@ module.exports = class Style {
     };
   }
 
-  creatPostCSSLoader(env = 'development', prefixerWrap = '') {
+  static creatPostCSSLoader(env = 'development', prefixerWrap = '') {
     const postCSSPlugins = [
       cssnext({
         browsers: [
@@ -97,7 +97,7 @@ module.exports = class Style {
       sorting
     ];
 
-    if (env === 'development') {
+    if (env === 'production') {
       const index = postCSSPlugins.indexOf(flexibility);
       postCSSPlugins.splice(index, 0, cssnano({
         // 关闭cssnano的autoprefixer选项，不然会和前面的autoprefixer冲突
@@ -123,10 +123,10 @@ module.exports = class Style {
   }
 
 
-  static createInlineSCSStoCSSConfig({prefixWrap = '', cssConfig = {}}) {
-    const style = new Style(prefixWrap);
-    return style.inlineSCSStoCSS(cssConfig);
-  }
+  // static createInlineSCSStoCSSConfig({prefixWrap = '', cssConfig = {}}) {
+  //   const style = new Style(prefixWrap);
+  //   return style.inlineSCSStoCSS(cssConfig);
+  // }
 
 
   /**
@@ -139,7 +139,7 @@ module.exports = class Style {
    * @returns {{module: {rules: [*,*]}}}
    */
 
-  inlineSCSStoCSS({env = 'development', filter = '', path, extraResources = [], prefixWrap=''}) {
+  static inlineSCSStoCSS({env = 'development', filter = '', path=[], extraResources = [], prefixWrap=''}) {
     const postCssLoader = this.creatPostCSSLoader(env, prefixWrap);
     let scssLoader;
     const loaders = [
@@ -153,19 +153,19 @@ module.exports = class Style {
         }
       },
       postCssLoader,
-      {
-        loader: 'fast-sass-loader'
-      }
       // {
-      //   loader: 'resolve-url-loader'
-      // },
-      // {
-      //   loader: 'sass-loader',
-      //   options: {
-      //     sourceMap: env === 'development',
-      //     includePaths: extraResources
-      //   }
+      //   loader: 'fast-sass-loader'
       // }
+      {
+        loader: 'resolve-url-loader'
+      },
+      {
+        loader: 'sass-loader',
+        options: {
+          sourceMap: true,
+          includePaths: extraResources
+        }
+      }
     ];
     if (filter === 'exclude') {
       scssLoader = {
@@ -201,7 +201,7 @@ module.exports = class Style {
                   sourceMap: env === 'development'
                 }
               },
-              this.postCssLoader
+              postCssLoader
             ]
           },
           scssLoader
@@ -210,10 +210,10 @@ module.exports = class Style {
     });
   };
 
-  static createExtractSCSStoCSSConfig({prefixWrap = '', cssConfig = {}}) {
-    const style = new Style(prefixWrap);
-    return style.extractSCSStoCSS(cssConfig);
-  }
+  // static createExtractSCSStoCSSConfig({prefixWrap = '', cssConfig = {}}) {
+  //   const style = new Style(prefixWrap);
+  //   return style.extractSCSStoCSS(cssConfig);
+  // }
 
   /**
    * Creating the configuration of converting SCSS to extract css.
@@ -222,11 +222,16 @@ module.exports = class Style {
    * @param {Array} path -The regular expression of exclude path.
    * @param {Array} extraResources -The array of the paths of the external resource you want to include.
    * @param {String} fileName -The name of the extracted CSS file.
+   * @param {String} prefixWrap -The class name that wrap all other element.
    * @returns {{module: {rules: [*,*]}, plugins: [*]}}
    */
-  extractSCSStoCSS({env = 'production', filter = '', path = [], extraResources = [], fileName = '', prefixWrap=''}) {
+  static extractSCSStoCSS({env = 'production', filter = '', path = [], extraResources = [], fileName = '', prefixWrap=''}) {
     const postCssLoader = this.creatPostCSSLoader(env, prefixWrap);
-    const extractCSS = fileName === '' ? new ExtractTextPlugin('[name].[chunkhash].css') : new ExtractTextPlugin(`${fileName}.[chunkhash].css`);
+    const extractName = fileName === '' ? '[name].[chunkhash].css' : `${fileName}.[chunkhash].css`;
+    const extractCSS = new ExtractTextPlugin({
+      filename: extractName,
+      allChunks: true
+    });
     let scssLoader;
     const loaders = [
       {
@@ -255,7 +260,7 @@ module.exports = class Style {
         test: /\.scss$/,
         loader: extractCSS.extract({
           fallback: 'style-loader',
-          loader: loaders
+          use: loaders
         }),
         exclude: path
       };
@@ -264,7 +269,7 @@ module.exports = class Style {
         test: /\.scss$/,
         loader: extractCSS.extract({
           fallback: 'style-loader',
-          loader: loaders
+          use: loaders
         }),
         include: path
       };
@@ -273,7 +278,7 @@ module.exports = class Style {
         test: /\.scss$/,
         loader: extractCSS.extract({
           fallback: 'style-loader',
-          loader: loaders
+          use: loaders
         })
       };
     }
@@ -294,7 +299,7 @@ module.exports = class Style {
                     sourceMap: env === 'development'
                   }
                 },
-                this.postCssLoader
+                postCssLoader
               ]
             })
           },
@@ -306,8 +311,7 @@ module.exports = class Style {
         extractCSS
       ]
     };
-  };
-
+  }
 
   /**
    * This is a under-testing function for creating the configuration of CSS module.
@@ -319,10 +323,15 @@ module.exports = class Style {
    * @param {String} fileName -The file name of the extracted CSS file.
    * @returns {{module: {loaders: [*,*]}, sassLoader: {env: *, includePaths: *}, sassResources: *, plugins: [*]}}
    */
-  SCSStoCSSModule({env = 'development', filter = '', path = [], extraResources = [], sassResource = [], fileName = ''}) {
+  static SCSStoCSSModule({env = 'development', filter = '', path = [], extraResources = [], sassResource = [], fileName = ''}) {
     const postCssLoader = this.creatPostCSSLoader(env);
     // Sass loader setting for css module:
-    const extractCSS = fileName === '' ? new ExtractTextPlugin('[name].[chunkhash].css') : new ExtractTextPlugin(`${fileName}.[chunkhash].css`);
+    const extractName = fileName === '' ? '[name].[chunkhash].css' : `${fileName}.[chunkhash].css`;
+    const extractCSS = new ExtractTextPlugin({
+      filename: extractName,
+      allChunks: true,
+      ignoreOrder: true
+    });
 
     // const extractCSS = new ExtractTextPlugin('[name].[chunkhash].css');
     const inline = [
@@ -330,7 +339,7 @@ module.exports = class Style {
       {
         loader: 'css-loader',
         options: {
-          env,
+          sourceMap: env === 'development',
           modules: true,
           importLoaders: 2,
           localIdentName: '[name]__[local]___[hash:base64:5]'
@@ -338,9 +347,12 @@ module.exports = class Style {
       },
       postCssLoader,
       {
+        loader: 'resolve-url-loader'
+      },
+      {
         loader: 'sass-loader',
         options: {
-          env,
+          sourceMap: true,
           includePaths: extraResources
         }
       },
@@ -354,7 +366,7 @@ module.exports = class Style {
 
     const extract = extractCSS.extract({
       fallback: 'style-loader',
-      loader: [
+      use: [
         {
           loader: 'css-loader',
           options: {
@@ -364,11 +376,14 @@ module.exports = class Style {
             localIdentName: '[name]__[local]___[hash:base64:5]'
           }
         },
-        this.postCssLoader,
+        postCssLoader,
+        {
+          loader: 'resolve-url-loader'
+        },
         {
           loader: 'sass-loader',
           options: {
-            sourceMap: env === 'development',
+            sourceMap: true,
             sourceMapContents: env === 'development',
             includePaths: extraResources
           }
@@ -411,14 +426,14 @@ module.exports = class Style {
             test: /\.css$/,
             loader: extractCSS.extract({
               fallback: 'style-loader',
-              loader: [
+              use: [
                 {
                   loader: 'css-loader',
                   options: {
                     sourceMap: env === 'development'
                   }
                 },
-                this.postCssLoader
+                postCssLoader
               ]
             })
           },

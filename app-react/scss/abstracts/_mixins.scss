@@ -1,0 +1,159 @@
+// Standard device screen widths
+$iphone-portrait: 320px;
+$iphone-landscape: 480px;
+$ipad-portrait: 767px;
+$ipad-landscape: 980px;
+$desktop: 1224px;
+$desktop-large: 1824px;
+
+// General device targeting
+// Use: Only use if you want the style to apply to many devices
+// Example:
+//     +apply_to(smaller-than, iphone-portrait)
+// will apply CSS to anything smaller than an iPhone-portrait
+@mixin apply_to($ltgt, $device){
+  $extrema: null;
+
+  @if ($ltgt == less-than) {
+    $extrema: max;
+  }
+
+  @if ($ltgt == greater-than) {
+    $extrema: min;
+  }
+
+  @if ($device == iphone-landscape) {
+    @media only screen and (#{$extrema}-width: $iphone-landscape){
+      @content
+    }
+  }
+
+  @if ($device == iphone-portrait) {
+    @media only screen and (#{$extrema}-width: $iphone-portrait){
+      @content
+    }
+  }
+
+  @if ($device == ipad-landscape) {
+    @media only screen and (#{$extrema}-width: $ipad-landscape){
+      @content
+    }
+  }
+
+  @if ($device == ipad-portrait){
+    @media only screen and (#{$extrema}-width: $ipad-portrait){
+      @content
+    }
+  }
+
+  @if ($device == desktop){
+    @media only screen and (#{$extrema}-width: $desktop){
+      @content
+    }
+  }
+
+  @if ($device == desktop-large0) {
+    @media only screen and (#{$extrema}-width: $desktop-large){
+      @content
+    }
+  }
+}
+
+
+// =============================================================================
+// String Replace
+// =============================================================================
+
+@function str-replace($string, $search, $replace: "") {
+    $index: str-index($string, $search);
+
+    @if $index {
+        @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+    }
+
+    @return $string;
+}
+
+// =============================================================================
+// Font Face
+// =============================================================================
+
+@mixin font-face($name, $path, $weight: null, $style: null, $exts: eot woff2 woff ttf svg) {
+    $src: null;
+
+    $extmods: (
+        eot: "?",
+        svg: "#" + str-replace($name, " ", "_")
+    );
+
+    $formats: (
+        otf: "opentype",
+        ttf: "truetype"
+    );
+
+    @each $ext in $exts {
+        $extmod: if(map-has-key($extmods, $ext), $ext + map-get($extmods, $ext), $ext);
+        $format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+        $src: append($src, url(quote($path + "." + $extmod)) format(quote($format)), comma);
+    }
+
+    @font-face {
+        font-family: quote($name);
+        font-style: $style;
+        font-weight: $weight;
+        src: $src;
+    }
+}
+/**
+ * Render the color with transparency, and provide the support from older browser
+ * @param  {string} $attribute  - Any css attribute. eg. 'background'
+ * @param  {color} $color      - Any css color. eg. rgba(balck, 0.5)
+ * @param  {color} $background - Any css color used for mix with the $color.
+ */
+@mixin alpha-attribute($attribute, $color, $background) {
+  $percent: alpha($color) * 100%;
+  $opaque: opacify($color, 1);
+  $solid-color: mix($opaque, $background, $percent);
+  #{$attribute}: $solid-color;
+  #{$attribute}: $color;
+}
+
+/**
+ * Css Trick to make the vertical align perfecly
+ */
+@mixin ghostVerticalAlign(){
+  &:before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%; width: .1px;
+  }
+}
+
+/**
+ * Set a rem font size with pixel fallback
+ * @param  {string} $size - The size you wish to set
+ */
+@function calculateRem($size) {
+  $remSize: $size / 16px;
+  @return $remSize * 1rem;
+}
+@mixin font-size($size) {
+  font-size: $size;
+  font-size: calculateRem($size);
+}
+@mixin styleScrollbar() {
+  ::-webkit-scrollbar {
+    width: 10px;
+    opacity: 0.4;
+  }
+
+  ::-webkit-scrollbar-track {
+    border-radius: 15px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.2);
+  }
+}

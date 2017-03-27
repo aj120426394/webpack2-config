@@ -5,12 +5,15 @@ parser: "babel-eslint"
 
 env:
   browser: true
-  mocha: true
+  jest: true
+#  mocha: true
   node: true
   es6: true
 
+
 globals:
   __DEV_TOOLS__: true
+  describe: true
 
 rules:
   new-cap: "off"

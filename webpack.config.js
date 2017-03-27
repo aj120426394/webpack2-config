@@ -23,9 +23,7 @@ const cssConfig = {
   extraResources: []
 };
 
-base.addStyleConfig({
-  cssConfig: cssConfig
-});
+base.addStyleConfig(cssConfig);
 //
 // base.addConfig({
 //   config: {
@@ -71,5 +69,5 @@ switch (process.env.npm_lifecycle_event) {
   default:
     config = base.buildForDevServer();
 }
-// console.log(config);
+// console.log(config.module.rules[9]);
 module.exports = config;

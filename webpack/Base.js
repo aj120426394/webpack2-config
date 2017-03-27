@@ -125,29 +125,32 @@ module.exports = class Base{
       },
       plugins: [
         this.htmlWebpack,
-        // (env === 'development' ? hotModuleReplacement : null),
         new webpack.NamedModulesPlugin()
       ]
     });
   }
+
 
   /**
    * Adding the style configuration to the webpack setting.
    *  - Using inlineCSS in the development environment
    *  - Extract the css file in production environment
    *
-   * @param {Object} cssConfig - The CSS configuration with: {filter, path, extraResources}.
-   * @param {String} prefixWrap - The class name you want to wrap your all css setting. (Only use in special condition)
+   * @param {Object} cssConfig - The CSS configuration with: {filter, path, extraResources, fileName, prefixWrap}.
    */
-  addStyleConfig({ cssConfig , prefixWrap }) {
-    const style = new Style(prefixWrap);
-    const devConfig = JSON.parse(JSON.stringify(cssConfig));
+  addStyleConfig(cssConfig = {}) {
+    // const style = new Style(prefixWrap);
+    // const devConfig = JSON.parse(JSON.stringify(cssConfig));
+    const devConfig = Util.duplicateObject(cssConfig);
     devConfig['env'] = 'development';
-    const prodConfig = JSON.parse(JSON.stringify(cssConfig));
+    // const prodConfig = JSON.parse(JSON.stringify(cssConfig));
+    const prodConfig = Util.duplicateObject(cssConfig);
     prodConfig['env'] = 'production';
 
-    this.devConfig = merge(this.devConfig, style.inlineSCSStoCSS(devConfig));
-    this.prodConfig = merge(this.prodConfig, style.extractSCSStoCSS(prodConfig));
+
+    this.devConfig = merge(this.devConfig, Style.inlineSCSStoCSS(devConfig));
+    this.prodConfig = merge(this.prodConfig, Style.extractSCSStoCSS(prodConfig));
+    // console.log(this.prodConfig);
   }
 
   /**
@@ -158,7 +161,7 @@ module.exports = class Base{
    *                     - Set 'production' if the additional configuration only be used in production environment.
    *                     - Set '' or non-provide if the additional configuration be used in any environment.
    */
-  addConfig ({ config = {}, env='' }) {
+  addConfig({ config = {}, env = '' }) {
     if (env === 'development') {
       this.devConfig = merge(this.devConfig, config);
     } else if (env === 'production') {

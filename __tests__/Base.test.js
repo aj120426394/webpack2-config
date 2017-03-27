@@ -1,5 +1,6 @@
 import Base from '../webpack/Base';
 import Style from '../webpack/Style';
+
 import defaultSetting from './fixture/default-prod';
 import defaultStyleSetting from './fixture/style-prod';
 
@@ -23,7 +24,7 @@ const POSTCSS_PREFIXWRAP = {
 const EXTRA_SCSS_RESOURCES = [];
 const SASS_RESOURCES = ["./app/scss/app.scss"];
 
-describe("Prod configuration", () =>{
+describe("The Base configuration should", () => {
   const base = new Base({
     context: CONTEXT,
     entry: ENTRY,
@@ -33,20 +34,7 @@ describe("Prod configuration", () =>{
     devServerPort: DEV_SERVER_PORT,
     htmlPath: './index.html'
   });
-  test("Default", () => {
+  test('assign default configuration when only required configuration is set', () => {
     expect(base.prodConfig).toMatchObject(defaultSetting);
   });
-  //
-  // test("Add Extract Style", () => {
-  //   const cssConfig = {
-  //     filter: '',
-  //     path: [],
-  //     extraResources: EXTRA_SCSS_RESOURCES
-  //   };
-  //   base.addStyleConfig({
-  //     config: cssConfig
-  //   });
-  //   expect(base.prodConfig).toMatchObject(defaultStyleSetting);
-  // })
 });
-

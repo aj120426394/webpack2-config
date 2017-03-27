@@ -75,18 +75,18 @@ const cssConfig = {
   extraResources: [
     path.resolve(__dirname, "node_modules/compass-mixins/lib"),
     path.resolve(__dirname, "app/vendors/materialize/sass")
-  ]
+  ],
+  fileName: '',
+  prefixWrap: ''
 };
-example.addStyleConfig({
-    cssConfig: cssConfig,
-    prefixWrap: '.class-name'
-})
+example.addStyleConfig(cssConfig)
 ```
 * `cssConfig`:
     * `filter (option)`: This can set the SCSS loader should`'include'` or `'exclude'` the path below during the bundling.
     * `path (option)`: This is the path that you like to include/exclude in the SCSS loader. 
     * `extraResources (option)`: The extra resource that you like to include when you are bundling the SCSS.
-* `prefixWrap (option)`: This is the option that can enable [postcss-prefixwrap](https://github.com/dbtedman/postcss-prefixwrap). If you don't want to enable this function, please do not provide it as parameter.
+    * `prefixWrap (option)`: This is the option that can enable [postcss-prefixwrap](https://github.com/dbtedman/postcss-prefixwrap). If you don't want to enable this function, please do not provide it as parameter.
+    * `fileName (option)`: The file name of the css file when it be extracted in the production mode. If you leave it blank, it will become the name of your entry point (js).
 
 7\. `addConfig()`: Add any additional settings into the configuration.
  > **Execute this function before execute `buildForDevServer()`, `buildForDevelopment()`, `buildForProduction()`**
@@ -102,17 +102,29 @@ example.addConfig(extraConfig);
 ```
 
 ## Extra
-In this package it also provide some other configuration that you can use [webpack-merge](https://github.com/survivejs/webpack-merge) to merge into the default configuration. 
+Some other function that can generate the configuration that can be add in `addConfig()`
 
 * `webpack2-general-config.Style`:
-    * `extractSCSStoCSS({env = 'development', filter = '', path, extraResources = []})`:
-    * `inlineSCSStoCSS({env = 'development', filter = '', path = [], extraResources = []})`:
+    * `Style.extractSCSStoCSS({env = 'production', filter = '', path = [], extraResources = [], fileName = '', prefixWrap=''})`
+    * `Style.inlineSCSStoCSS({env = 'development', filter = '', path=[], extraResources = [], prefixWrap=''})`
+    * `Style.addSprite({srcFolder, srcType = '*.png', targetImgFolder, targetSCSSFolder, cssImageRef})`:
+       ```javascript
+        Style.addSprite({
+           srcFolder: path.resolve(__dirname, 'app/assets/images/icon'),
+           srcType: '*.png',
+           targetImgFile: path.resolve(__dirname, 'app/assets/images/sprite.png'),
+           targetSCSSFile: path.resolve(__dirname, 'app/scss/abstracts/_sprite.scss'),
+           cssImageRef: '../asset/images/sprite.png'
+          })
+        ```
 
 * `webpack2-general-config.Util`:
-    * `devServer({ host = 'localhost', port = 8100 })`
-    * `optimize()`
-    * `setEnvironmentVariable(variables)`
-    * `clean (path)`
-    * `providePlugin(provide)`
+    * `Util.devServer({ host = 'localhost', port = 8100 })`
+    * `Util.optimize()`
+    * `Util.setEnvironmentVariable(variables)`
+    * `Util.clean (path)`
+    * `Util.providePlugin(provide)`
 
-* `webpack2-general-config.React`:
+* `webpack2-general-config.Lint`:
+    * `Util.eslint(path, filter = "exclude")`
+    * `Util.sassLint(path)`

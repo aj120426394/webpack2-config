@@ -132,16 +132,16 @@ module.exports = class React{
    *
    * @param {Object} cssConfig - The CSS configuration with: {filter, path, extraResources}.
    */
-  addExtractStyleConfig({ cssConfig }) {
-    const style = new Style();
-
-    const devConfig = JSON.parse(JSON.stringify(cssConfig));
+  addExtractStyleConfig(cssConfig = {}) {
+    // const devConfig = JSON.parse(JSON.stringify(cssConfig));
+    const devConfig = Util.duplicateObject(cssConfig);
     devConfig['env'] = 'development';
-    const prodConfig = JSON.parse(JSON.stringify(cssConfig));
+    // const prodConfig = JSON.parse(JSON.stringify(cssConfig));
+    const prodConfig = Util.duplicateObject(cssConfig);
     prodConfig['env'] = 'production';
 
-    this.devConfig = merge(this.devConfig, style.extractSCSStoCSS(devConfig));
-    this.prodConfig = merge(this.prodConfig, style.extractSCSStoCSS(prodConfig));
+    this.devConfig = merge(this.devConfig, Style.extractSCSStoCSS(devConfig));
+    this.prodConfig = merge(this.prodConfig, Style.extractSCSStoCSS(prodConfig));
   }
 
   /**
@@ -149,15 +149,20 @@ module.exports = class React{
    *
    * @param {Object} cssConfig - The CSS configuration with: {filter, path, extraResources}.
    */
-  addModuleStyleConfig({ cssConfig }) {
-    const style = new Style();
-    const devConfig = JSON.parse(JSON.stringify(cssConfig));
+  addModuleStyleConfig( cssConfig={} ) {
+    // const devConfig = JSON.parse(JSON.stringify(cssConfig));
+
+    const devConfig = Object.assign({}, cssConfig);
     devConfig['env'] = 'development';
-    const prodConfig = JSON.parse(JSON.stringify(cssConfig));
+    // const prodConfig = JSON.parse(JSON.stringify(cssConfig));
+
+    const prodConfig = Object.assign({}, cssConfig);
     prodConfig['env'] = 'production';
 
-    this.devConfig = merge(this.devConfig, style.SCSStoCSSModule(devConfig));
-    this.prodConfig = merge(this.prodConfig, style.SCSStoCSSModule(prodConfig));
+    this.devConfig = merge(this.devConfig, Style.SCSStoCSSModule(devConfig));
+    this.prodConfig = merge(this.prodConfig, Style.SCSStoCSSModule(prodConfig));
+    console.log(devConfig);
+    console.log(prodConfig);
   }
 
   /**

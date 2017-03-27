@@ -76,9 +76,21 @@ module.exports = class Util{
         new webpack.NoEmitOnErrorsPlugin()
       ]
     };
-  };
+  }
 
-
+  static duplicateObject(obj) {
+    const output = {};
+    Object.keys(obj).forEach(key => {
+      if (Object.prototype.toString.call(obj[key]) === '[object Object]') {
+        output[key] = this.duplicateObject(obj[key]);
+      } else if (Object.prototype.toString.call(obj[key]) === '[object Array]') {
+        output[key] = obj[key].splice();
+      } else {
+        output[key] = obj[key];
+      }
+    });
+    return output;
+  }
 
   /**
    * Creating a webpack configuration for environment variable.
