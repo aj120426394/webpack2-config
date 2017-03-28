@@ -49,6 +49,7 @@
     "postcss-pseudoelements": "^4.0.0",
     "postcss-sorting": "^2.0.1",
     "postcss-will-change": "^1.1.0",
+    "resolve-url-loader": "^2.0.2",
     "sass-loader": "^6.0.3",
     "sass-resources-loader": "^1.2.0",
     "style-loader": "^0.16.0",
@@ -84,7 +85,7 @@
     "redux-action-buffer": "^1.0.1",
     "redux-persist": "^4.5.0",
     "redux-thunk": "^2.2.0",
-    "resolve-url-loader": "^2.0.2",
+
     "stylelint": "^7.9.0"
   },
   "jest": {

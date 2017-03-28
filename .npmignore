@@ -25,4 +25,5 @@ karma
 coverage
 __tests__
 node_modules
+.idea
 
