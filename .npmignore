@@ -10,12 +10,19 @@
 config.gypi
 CVS
 npm-debug.log
+.babelrc
+.editorconfig
+.eslintrc.yml
+.npmignore
+.stylelintrc.yml
+.travis.yml
 
 
 #Diretories
 app
+app-react
 karma
 coverage
-__test__
+__tests__
 node_modules
 
