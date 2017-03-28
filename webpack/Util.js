@@ -84,7 +84,7 @@ module.exports = class Util{
       if (Object.prototype.toString.call(obj[key]) === '[object Object]') {
         output[key] = this.duplicateObject(obj[key]);
       } else if (Object.prototype.toString.call(obj[key]) === '[object Array]') {
-        output[key] = obj[key].splice();
+        output[key] = obj[key].slice();
       } else {
         output[key] = obj[key];
       }

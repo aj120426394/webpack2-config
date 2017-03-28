@@ -1,8 +1,8 @@
 import React from 'react';
-import {Provider} from 'react-redux';
-import {Router, Route, browserHistory} from 'react-router';
-import {persistStore} from 'redux-persist';
-import {syncHistoryWithStore} from 'react-router-redux';
+import { Provider } from 'react-redux';
+import { Router, Route, browserHistory } from 'react-router';
+import { persistStore } from 'redux-persist';
+import { syncHistoryWithStore } from 'react-router-redux';
 import store from '../redux/store/config';
 import TEMPLATE from './app';
 
@@ -45,7 +45,7 @@ export default class RouterContainer extends React.Component {
       return (
         <Provider store={store}>
           <Router history={history}>
-            <Route path="/" component={TEMPLATE}/>
+            <Route path="/" component={TEMPLATE} />
           </Router>
         </Provider>
       );

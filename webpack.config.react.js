@@ -9,8 +9,8 @@ const react = new webpackConfig.React({
   outputPath: path.join(__dirname, 'dist') ,
   publicPath: 'http://localhost:8100/',
   alias: {
-    materialize: path.resolve(__dirname, 'app/vendors/materialize/js/bin/materialize.js'),
-    hammerjs: path.resolve(__dirname, 'app/vendors/materialize/js/hammer.min.js')
+    materialize: path.resolve(__dirname, 'app-react/vendors/materialize/js/bin/materialize.js'),
+    hammerjs: path.resolve(__dirname, 'app-react/vendors/materialize/js/hammer.min.js')
   },
   devServerPort: 8100,
   htmlPath: './index.html'
@@ -19,7 +19,7 @@ const react = new webpackConfig.React({
 
 const cssConfig = {
   filter: 'include',
-  path: [/(node_modules|bower_components|vendors)/, path.resolve(__dirname, "app/scss/vendors"), path.resolve(__dirname, "app/vendors")],
+  path: [/(node_modules|bower_components|vendors)/, path.resolve(__dirname, "app-react/scss/vendors"), path.resolve(__dirname, "app-react/vendors")],
   extraResources: [
     path.resolve(__dirname, "node_modules/compass-mixins/lib"),
     path.resolve(__dirname, "app/vendors/materialize/sass")
@@ -30,15 +30,15 @@ const cssConfig = {
 //
 react.addModuleStyleConfig({
   filter: 'exclude',
-  path: [/(node_modules)/, path.resolve(__dirname, "app/scss/vendors"), path.resolve(__dirname, "app/vendors")],
-  sassResource: [path.resolve(__dirname, "app/scss/app.scss")]
+  path: [/(node_modules)/, path.resolve(__dirname, "app-react/scss/vendors"), path.resolve(__dirname, "app-react/vendors")],
+  sassResource: [path.resolve(__dirname, "app-react/scss/app.scss")]
 });
 react.addExtractStyleConfig({
   filter: 'include',
-  path: [/(node_modules)/, path.resolve(__dirname, "app/scss/vendors"), path.resolve(__dirname, "app/vendors")],
+  path: [/(node_modules)/, path.resolve(__dirname, "app-react/scss/vendors"), path.resolve(__dirname, "app-react/vendors")],
   extraResources: [
     path.resolve(__dirname, "node_modules/compass-mixins/lib"),
-    path.resolve(__dirname, "app/vendors/materialize/sass")
+    path.resolve(__dirname, "app-react/vendors/materialize/sass")
   ]
 });
 // base.addConfig({

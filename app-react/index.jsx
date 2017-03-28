@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { AppContainer } from 'react-hot-loader'
+import { AppContainer } from 'react-hot-loader';
 
 // import injectTapEventPlugin from 'react-tap-event-plugin';
 import RouterContainer from './container/RouterContainer';
@@ -11,7 +11,7 @@ import RouterContainer from './container/RouterContainer';
 /**
  * Import .httaccess if you are using Apache as the hosting server.
  */
-import '../.htaccess';
+// import '../.htaccess';
 // import 'index.html';
 
 
@@ -41,6 +41,17 @@ if (module.hot) {
     }
   };
 }
+
+// const render = Component => {
+//   ReactDOM.render(
+//     <AppContainer>
+//       <Component />
+//     </AppContainer>,
+//     document.getElementById('root')
+//   );
+// };
+//
+// render(RouterContainer);
 
 
 ReactDOM.render(

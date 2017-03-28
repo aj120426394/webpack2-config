@@ -33,7 +33,8 @@ module.exports = class React{
   }
 
   initialization( env='development'){
-    const entries = JSON.parse(JSON.stringify(this.entry));
+    // const entries = JSON.parse(JSON.stringify(this.entry));
+    const entries = Util.duplicateObject(this.entry);
 
     if (env === 'development') {
       Object.keys(entries).forEach((key) => {
