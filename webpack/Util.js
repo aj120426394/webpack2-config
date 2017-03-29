@@ -4,14 +4,15 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 // import CleanWebpackPlugin from 'clean-webpack-plugin';
 
 
-module.exports = class Util{
+module.exports = class Util {
   /**
    * Creating a webpack dev-server configuration with customize host and port.
    * @param {String} host -The address you want to host this project
-   * @param {Number} port -The port you want to host this porject.
+   * @param {Number} port -The port you want to host this project.
+   * @param {Boolean} verbose -The controller for output detail.
    * @returns {{devServer: {historyApiFallback: boolean, hot: boolean, inline: boolean, stats: string, host: *, port: *}, plugins: [*]}}
    */
-  static devServer({ host = 'localhost', port = 8100 }) {
+  static devServer({host = 'localhost', port = 8100, verbose = false}) {
     return {
       devServer: {
         // Enable history API fallback so HTML5 History API based
@@ -23,7 +24,7 @@ module.exports = class Util{
         hot: true,
         inline: true,
         // Display only errors to reduce the amount of output.
-        // stats: 'errors-only',
+        stats: verbose ? 'normal' : 'errors-only',
         // Parse host and port from env to allow customization.
         //
         // If you use Vagrant or Cloud9, set
@@ -98,16 +99,17 @@ module.exports = class Util{
    * @param {String} value - The value you would like to assign.
    * @returns {{plugins: [*]}}
    */
-// exports.setFreeVariable = function (key, value) {
-//   const env = {};
-//   env[key] = JSON.stringify(value);
-//
-//   return {
-//     plugins: [
-//       new webpack.DefinePlugin(env)
-//     ]
-//   };
-// };
+  // TODO: Check if DefinePlugin is working or not.
+  static setFreeVariable(key, value) {
+    const env = {};
+    env[key] = JSON.stringify(value);
+
+    return {
+      plugins: [
+        new webpack.DefinePlugin(env)
+      ]
+    };
+  }
 
   /**
    * Creating a webpack configuration for environment variable.
@@ -121,7 +123,7 @@ module.exports = class Util{
         new webpack.EnvironmentPlugin(variables)
       ]
     };
-  };
+  }
 
   /**
    * Creating a webpack extract bundle configuration, extract the webpack runtime setting and some library.
@@ -132,7 +134,7 @@ module.exports = class Util{
   static extractJSBundle({name = '', entries = []}) {
     let names = ['manifest'];
     const entry = {};
-    if (!name && name.length !== 0 && !entries && entries.length !== 0 ) {
+    if (!name && name.length !== 0 && !entries && entries.length !== 0) {
       entry[name] = entries;
       names.unshift(name);
     }
@@ -155,7 +157,7 @@ module.exports = class Util{
    * @param {String} path -The path of the production folder.
    * @returns {{plugins: [*]}}
    */
-  static clean (path) {
+  static clean(path) {
     return {
       plugins: [
         new CleanWebpackPlugin([path], {
@@ -167,11 +169,11 @@ module.exports = class Util{
     };
   };
 
-  static providePlugin( provide={} ) {
+  static providePlugin(provide = {}) {
     const providePlugin = new webpack.ProvidePlugin(provide);
     return {
       plugins: [
-        new providePlugin (provide)
+        providePlugin
       ]
     };
   }
