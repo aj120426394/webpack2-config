@@ -1,6 +1,6 @@
 {
   "name": "webpack2-general-config",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "This is a webpack2 configuration for gerneral purpose.",
   "main": "main.js",
   "directories": "/webpack",
@@ -85,7 +85,6 @@
     "redux-action-buffer": "^1.0.1",
     "redux-persist": "^4.5.0",
     "redux-thunk": "^2.2.0",
-
     "stylelint": "^7.9.0"
   },
   "jest": {

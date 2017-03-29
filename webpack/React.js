@@ -113,9 +113,6 @@ module.exports = class React{
             },
             include: /(node_modules|bower_components|vendors)/
           }, {
-            test: /\.hbs$/,
-            loader: 'handlebars-loader'
-          }, {
             test: /\.html$/,
             loader: 'html-loader'
           }]
@@ -223,6 +220,7 @@ module.exports = class React{
    */
   buildForDevelopment(){
     const config = merge(
+      Util.clean(this.outputPath),
       this.devConfig,
       {
         devtool: 'inline-source-map'
@@ -233,9 +231,10 @@ module.exports = class React{
 
   /**
    * Building webpack configuration for dev Server.
+   * {Boolean} verbose -The controller for output detail.
    * @returns {*}
    */
-  buildForDevServer() {
+  buildForDevServer(verbose = false) {
     const config = merge(
       this.devConfig,
       {
@@ -243,7 +242,8 @@ module.exports = class React{
       },
       Util.devServer({
         host: 'localhost',
-        port: this.devServerPort
+        port: this.devServerPort,
+        verbose: verbose
       })
     );
     return config;

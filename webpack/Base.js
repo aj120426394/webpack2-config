@@ -117,9 +117,6 @@ module.exports = class Base{
             },
             include: /(node_modules|bower_components|vendors)/
           }, {
-            test: /\.hbs$/,
-            loader: 'handlebars-loader'
-          }, {
             test: /\.html$/,
             loader: 'html-loader'
           }]
@@ -212,6 +209,7 @@ module.exports = class Base{
   buildForDevelopment(){
     const config = merge(
       this.devConfig,
+      Util.clean(this.outputPath),
       {
         devtool: 'inline-source-map'
       }
@@ -221,9 +219,11 @@ module.exports = class Base{
 
   /**
    * Building webpack configuration for dev Server.
+   *
+   * {Boolean} verbose -The controller for output detail.
    * @returns {*}
    */
-  buildForDevServer() {
+  buildForDevServer(verbose = false) {
     const config = merge(
       this.devConfig,
       {
@@ -231,7 +231,8 @@ module.exports = class Base{
       },
       Util.devServer({
         host: 'localhost',
-        port: this.devServerPort
+        port: this.devServerPort,
+        verbose: verbose
       })
     );
     return config;
