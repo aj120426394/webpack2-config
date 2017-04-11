@@ -1,0 +1,112 @@
+.fuck-black-board .super-important .this-is-damn-important {
+  position: relative;
+  max-width: 100%;
+  margin: 0;
+
+  .background {
+    width: 100%;
+    position: relative;
+    margin: 0;
+    padding: 0;
+  }
+
+  .content-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    font-size: 1em;
+
+    .introducing {
+      top: 30%;
+      left: 9%;
+    }
+
+    .learn {
+      top: 39%;
+      left: 13%;
+    }
+
+    .reflect {
+      top: 48%;
+      left: 15%;
+    }
+
+    .resource {
+      top: 57%;
+      left: 14%;
+    }
+
+    .discussion {
+      top: 66%;
+      left: 12%;
+    }
+
+    .collaborate {
+      top: 75%;
+      left: 9%;
+    }
+
+    .btn--return {
+      position: absolute;
+      bottom: 10%;
+      right: 5%;
+      color: white !important;
+      text-decoration: none !important;
+
+      &:visited {
+        color: white !important;
+        text-decoration: none !important;
+      }
+    }
+  }
+}
+
+.textContent {
+  width: 90%;
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+
+}
+
+div.dynamicItemContainer {
+  position: absolute;
+  width: 40%;
+  //height: 100%;
+  top: 45%;
+  right: 5%;
+  padding-top: 3%;
+  padding-bottom: 3%;
+  display: none;
+
+  //@include media("<maxWidth") {
+  //  top: 45%;
+  //}
+  //
+  //@include media("<bp1Width") {
+  //  top: 51%;
+  //}
+  &.show {
+    display: block;
+  }
+}
+
+div.youtube {
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 35px;
+  height: 0;
+  overflow: hidden;
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}

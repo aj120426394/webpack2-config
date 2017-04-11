@@ -1,0 +1,100 @@
+.navItem {
+  position: absolute;
+  display: table;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  color: black;
+  width: 30%;
+  height: 4vw;
+  transition-duration: 0.3s;
+  transition-property: all;
+  transition-timing-function: ease-out;
+
+  // Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,babec1+100
+  background: #fff; /* Old browsers */
+  background: -moz-linear-gradient(top, #fff 0%, #babec1 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, #fff 0%, #babec1 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, #fff 0%, #babec1 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#babec1', GradientType=0);
+
+  @include media("<bp1Width") {
+    width: 35%;
+  }
+
+  .navItem__title {
+    width: 90%;
+    float: right;
+    height: 100%;
+    display: table;
+    text-align: left;
+  }
+
+  .navItem__icon {
+    position: absolute;
+    left: 0;
+    transform: translateX(-50%);
+    top: 0;
+    max-height: 100%;
+    max-width: 100%;
+  }
+
+  span {
+    vertical-align: middle;
+    display: table-cell;
+    color: black;
+    font-size: 0.85vw;
+    margin: 0 auto;
+  }
+
+}
+
+.fuck-black-board .super-important .this-is-damn-important .navItem:hover {
+  @extend .z-depth-3;
+}
+
+.fuck-black-board .super-important .this-is-damn-important .navItem:active {
+  transition-duration: 0.1s;
+
+  @extend .z-depth-5;
+}
+
+.navItem--disable {
+  transition: none;
+  box-shadow: none;
+
+  &:hover {
+    box-shadow: none;
+  }
+
+  .navItem__icon {
+    opacity: 0.7;
+  }
+
+  .navItem__lockOverlay {
+    opacity: 1;
+    position: absolute;
+    cursor: not-allowed;
+    width: 110%;
+    height: 100%;
+    top: 0;
+    left: -10%;
+    z-index: 9999;
+    background-color: rgba(255, 255, 255, 0.5);
+
+    img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      margin: 0 auto;
+    }
+  }
+}
+
+.navItem--sub {
+  width: 24%;
+  height: 2vw;
+}
+
+

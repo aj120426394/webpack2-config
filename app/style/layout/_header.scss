@@ -1,0 +1,20 @@
+.header {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+
+  div {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 70%;
+  }
+
+  img {
+    position: relative;
+    left: 4%;
+    width: 20%;
+  }
+}

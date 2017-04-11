@@ -1,0 +1,15 @@
+.list {
+  padding: 0 20px;
+}
+
+.list--decimal > li {
+  list-style: decimal;
+}
+
+.list--disc > li {
+  list-style: disc;
+}
+
+.list--circle > li {
+  list-style: circle;
+}
