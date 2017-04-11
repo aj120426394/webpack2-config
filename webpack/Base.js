@@ -22,16 +22,14 @@ module.exports = class Base {
    * @param {Number} devServerPort - The port number for dev server.
    * @param {String} htmlPath - The path of the html file of your project.
    */
-  constructor({ context, entry, outputPath, publicPath, alias, devServerPort = 8100, htmlPath = './index.html' }) {
+  constructor({ context, entry, outputPath, publicPath, alias, devServerPort = 8100, htmlPath = '' }) {
     this.context = context;
     this.entry = entry;
     this.outputPath = outputPath;
     this.publicPath = publicPath;
     this.alias = alias;
     this.devServerPort = devServerPort;
-    this.htmlWebpack = new HtmlWebpackPlugin({
-      template: htmlPath
-    });
+    this.htmlPath = htmlPath;
 
     this.devConfig = this.initialization('development');
     this.prodConfig = this.initialization('production');
@@ -48,6 +46,13 @@ module.exports = class Base {
       });
     }
 
+    const plugins = [new webpack.NamedModulesPlugin()];
+    if (this.htmlPath !== '') {
+      plugins.unshift(new HtmlWebpackPlugin({
+        template: this.htmlPath
+      }));
+    }
+
     return ({
       context: this.context,
       entry: entries,
@@ -62,8 +67,8 @@ module.exports = class Base {
         modules: ['node_modules', '/app/vendors'],
         alias: this.alias
       },
-      profile: true,
-      cache: true,
+      profile: env === 'development',
+      cache: env === 'development',
       module: {
         rules: [
           {
@@ -121,10 +126,7 @@ module.exports = class Base {
             loader: 'html-loader'
           }]
       },
-      plugins: [
-        this.htmlWebpack,
-        new webpack.NamedModulesPlugin()
-      ]
+      plugins
     });
   }
 
