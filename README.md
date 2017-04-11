@@ -50,9 +50,9 @@ const example = new webpack2Config.Base({
 
 5\. After initialized the configuration, you can have the config output with 3 different modes.
 ```javascript
-const prodConfig = example.buildForProduction();
-const devConfig = example.buildForDevelopment(['jquery']);
-const devServerConfig = example.buildForDevServer();
+const prodConfig = example.buildForProduction(['jquery']);
+const devConfig = example.buildForDevelopment();
+const devServerConfig = example.buildForDevServer(true);
 ```
 * `buildForProduction([lib_name])`: The configuration for production which include:  
     * *Remove Package*
@@ -62,7 +62,7 @@ const devServerConfig = example.buildForDevServer();
     
 * `buildForDevelopment()`: The configuration for the development which include:
     * *inline Sourcemap*
-* `buildForDevServer()`: The configuration for the dev server which include:
+* `buildForDevServer(verbose)`: The configuration for the dev server which include:
     * *inline Sourcemap*
     * *Hot module replacement*
     
@@ -87,6 +87,7 @@ example.addStyleConfig(cssConfig)
     * `extraResources (option)`: The extra resource that you like to include when you are bundling the SCSS.
     * `prefixWrap (option)`: This is the option that can enable [postcss-prefixwrap](https://github.com/dbtedman/postcss-prefixwrap). If you don't want to enable this function, please do not provide it as parameter.
     * `fileName (option)`: The file name of the css file when it be extracted in the production mode. If you leave it blank, it will become the name of your entry point (js).
+    * `fastLoader (option)`: Switching from sass-loader to fast-sass-loader. (Enable this will stop supporting the `sourcemap` and `extraResource` from sass-loader).
 
 7\. `addConfig()`: Add any additional settings into the configuration.
  > **Execute this function before execute `buildForDevServer()`, `buildForDevelopment()`, `buildForProduction()`**
@@ -105,8 +106,9 @@ example.addConfig(extraConfig);
 Some other function that can generate the configuration that can be add in `addConfig()`
 
 * `webpack2-general-config.Style`:
-    * `Style.extractSCSStoCSS({env = 'production', filter = '', path = [], extraResources = [], fileName = '', prefixWrap=''})`
-    * `Style.inlineSCSStoCSS({env = 'development', filter = '', path=[], extraResources = [], prefixWrap=''})`
+    * `Style.extractSCSStoCSS({env = 'production', filter = '', path = [], extraResources = [], fileName = '', prefixWrap='', fastLoader = false})`
+    * `Style.inlineSCSStoCSS({env = 'development', filter = '', path=[], extraResources = [], prefixWrap='', fastLoader = false})`
+    * `Style.SCSStoCSSModule({ env = 'development', filter = '', path = [], extraResources = [], sassResource = [], fileName = '', fastLoader = false })`
     * `Style.addSprite({srcFolder, srcType = '*.png', targetImgFolder, targetSCSSFolder, cssImageRef})`:
        ```javascript
         Style.addSprite({
@@ -126,5 +128,5 @@ Some other function that can generate the configuration that can be add in `addC
     * `Util.providePlugin(provide)`
 
 * `webpack2-general-config.Lint`:
-    * `Util.eslint(path, filter = "exclude")`
-    * `Util.sassLint(path)`
+    * `Lint.eslint(path, filter = "exclude")`
+    * `Lint.sassLint(path)`

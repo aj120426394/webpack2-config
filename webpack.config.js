@@ -16,44 +16,14 @@ const base = new webpackConfig.Base({
   htmlPath: './index.html'
 });
 
-
-const cssConfig = {
-  filter: 'exclude',
-  path: [],
-  extraResources: []
-};
-
-base.addStyleConfig(cssConfig);
-//
-// base.addConfig({
-//   config: {
-//     module: {
-//       rules: [
-//         {
-//           test: /\.(scss|sass)$/,
-//           use: [
-//             'css-loader',
-//             'fast-sass-loader'
-//           ]
-//         },
-//         // other loaders ...
-//       ]
-//     }
-//   }
-// });
-
-//
-// const vendorCSSConfig = {
-//   fileName: 'vendor',
-//   filter: 'include',
-//   path: [path.resolve(__dirname, "app/scss/vendors"), path.resolve(__dirname, "app/vendors")],
-//   extraResources: []
-// };
-//
-// base.addStyleConfig({
-//   cssConfig: vendorCSSConfig
-// });
-
+base.addStyleConfig({
+  extraResources: [
+    path.resolve(__dirname, "node_modules/compass-mixins/lib"),
+    path.resolve(__dirname, "app/vendors/materialize/sass")
+  ],
+  prefixWrap: '.fuck-black-board .super-important .this-is-damn-important',
+  fastLoader: true
+});
 
 let config;
 switch (process.env.npm_lifecycle_event) {

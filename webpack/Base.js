@@ -10,7 +10,7 @@ const Util = require('./Util');
 const Style = require('./Style');
 const Lint = require('./Lint');
 
-module.exports = class Base{
+module.exports = class Base {
   /**
    * @constructor
    *
@@ -22,7 +22,7 @@ module.exports = class Base{
    * @param {Number} devServerPort - The port number for dev server.
    * @param {String} htmlPath - The path of the html file of your project.
    */
-  constructor({ context, entry, outputPath, publicPath, alias, devServerPort = 8100, htmlPath = './index.html' }){
+  constructor({ context, entry, outputPath, publicPath, alias, devServerPort = 8100, htmlPath = './index.html' }) {
     this.context = context;
     this.entry = entry;
     this.outputPath = outputPath;
@@ -37,7 +37,7 @@ module.exports = class Base{
     this.prodConfig = this.initialization('production');
   }
 
-  initialization( env='development'){
+  initialization(env = 'development') {
     // const entries = JSON.parse(JSON.stringify(this.entry));
     const entries = Util.duplicateObject(this.entry);
 
@@ -137,18 +137,12 @@ module.exports = class Base{
    * @param {Object} cssConfig - The CSS configuration with: {filter, path, extraResources, fileName, prefixWrap}.
    */
   addStyleConfig(cssConfig = {}) {
-    // const style = new Style(prefixWrap);
-    // const devConfig = JSON.parse(JSON.stringify(cssConfig));
     const devConfig = Util.duplicateObject(cssConfig);
-    devConfig['env'] = 'development';
-    // const prodConfig = JSON.parse(JSON.stringify(cssConfig));
+    devConfig.evn = 'development';
     const prodConfig = Util.duplicateObject(cssConfig);
-    prodConfig['env'] = 'production';
-
-
+    prodConfig.env = 'production';
     this.devConfig = merge(this.devConfig, Style.inlineSCSStoCSS(devConfig));
     this.prodConfig = merge(this.prodConfig, Style.extractSCSStoCSS(prodConfig));
-    // console.log(this.prodConfig);
   }
 
   /**
@@ -176,7 +170,7 @@ module.exports = class Base{
    * @param {Array} extractLibrary - The set of library you want to extract to a separate js file.
    * @returns {*}
    */
-  buildForProduction(extractLibrary=[]){
+  buildForProduction(extractLibrary = []) {
     let config = merge(
       this.prodConfig,
       Util.clean(this.outputPath),
@@ -190,7 +184,7 @@ module.exports = class Base{
       Util.optimize()
     );
 
-    if(extractLibrary.length !== 0) {
+    if (extractLibrary.length !== 0) {
       config = merge(
         config,
         Util.extractJSBundle({
@@ -206,7 +200,7 @@ module.exports = class Base{
    * Building webpack configuration for development
    * @returns {*}
    */
-  buildForDevelopment(){
+  buildForDevelopment() {
     const config = merge(
       this.devConfig,
       Util.clean(this.outputPath),

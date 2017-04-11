@@ -122,6 +122,28 @@ module.exports = class Style {
     };
   }
 
+  static createSCSSLoaders({ env = 'development', fastLoader = false }) {
+    if (fastLoader) {
+      return [
+        {
+          loader: 'fast-sass-loader'
+        }
+      ];
+    }
+    return [
+      {
+        loader: 'resolve-url-loader'
+      },
+      {
+        loader: 'sass-loader',
+        options: {
+          sourceMap: true,
+          includePaths: extraResources
+        }
+      }
+    ];
+  }
+
 
   // static createInlineSCSStoCSSConfig({prefixWrap = '', cssConfig = {}}) {
   //   const style = new Style(prefixWrap);
@@ -136,13 +158,13 @@ module.exports = class Style {
    * @param {Array} path -The regular expression of exclude path.
    * @param {Array} extraResources -The array of the paths of the external resource you want to include.
    * @param {String} prefixWrap -The prefix for each element in CSS.
+   * @param {Boolean} fastLoader -The controller of using fast-sass-loader.
    * @returns {{module: {rules: [*,*]}}}
    */
 
-  static inlineSCSStoCSS({env = 'development', filter = '', path=[], extraResources = [], prefixWrap=''}) {
+  static inlineSCSStoCSS({ env = 'development', filter = '', path = [], extraResources = [], prefixWrap = '', fastLoader = false }) {
     const postCssLoader = this.creatPostCSSLoader(env, prefixWrap);
-    let scssLoader;
-    const loaders = [
+    let loaders = [
       {
         loader: 'style-loader'
       },
@@ -152,21 +174,30 @@ module.exports = class Style {
           sourceMap: env === 'development'
         }
       },
-      postCssLoader,
-      // {
-      //   loader: 'fast-sass-loader'
-      // }
-      {
-        loader: 'resolve-url-loader'
-      },
-      {
-        loader: 'sass-loader',
-        options: {
-          sourceMap: true,
-          includePaths: extraResources
-        }
-      }
+      postCssLoader
     ];
+    if (fastLoader) {
+      loaders = loaders.concat([
+        {
+          loader: 'fast-sass-loader'
+        }
+      ]);
+    } else {
+      loaders = loaders.concat([
+        {
+          loader: 'resolve-url-loader'
+        },
+        {
+          loader: 'sass-loader',
+          options: {
+            sourceMap: true,
+            includePaths: extraResources
+          }
+        }
+      ]);
+    }
+
+    let scssLoader;
     if (filter === 'exclude') {
       scssLoader = {
         test: /\.scss$/,
@@ -225,36 +256,46 @@ module.exports = class Style {
    * @param {String} prefixWrap -The class name that wrap all other element.
    * @returns {{module: {rules: [*,*]}, plugins: [*]}}
    */
-  static extractSCSStoCSS({env = 'production', filter = '', path = [], extraResources = [], fileName = '', prefixWrap=''}) {
+  static extractSCSStoCSS({ env = 'production', filter = '', path = [], extraResources = [], fileName = '', prefixWrap = '', fastLoader = false }) {
     const postCssLoader = this.creatPostCSSLoader(env, prefixWrap);
     const extractName = fileName === '' ? '[name].[chunkhash].css' : `${fileName}.[chunkhash].css`;
     const extractCSS = new ExtractTextPlugin({
       filename: extractName,
       allChunks: true
     });
-    let scssLoader;
-    const loaders = [
+
+    let loaders = [
       {
         loader: 'css-loader',
         options: {
           sourceMap: env === 'development'
         }
       },
-      postCssLoader,
-      // {
-      //   loader: 'fast-sass-loader'
-      // }
-      {
-        loader: 'resolve-url-loader'
-      },
-      {
-        loader: 'sass-loader',
-        options: {
-          sourceMap: true,
-          includePaths: extraResources
-        }
-      }
+      postCssLoader
     ];
+
+    if (fastLoader) {
+      loaders = loaders.concat([
+        {
+          loader: 'fast-sass-loader'
+        }
+      ]);
+    } else {
+      loaders = loaders.concat([
+        {
+          loader: 'resolve-url-loader'
+        },
+        {
+          loader: 'sass-loader',
+          options: {
+            sourceMap: true,
+            includePaths: extraResources
+          }
+        }
+      ]);
+    }
+
+    let scssLoader;
     if (filter === 'exclude') {
       scssLoader = {
         test: /\.scss$/,
@@ -323,7 +364,7 @@ module.exports = class Style {
    * @param {String} fileName -The file name of the extracted CSS file.
    * @returns {{module: {loaders: [*,*]}, sassLoader: {env: *, includePaths: *}, sassResources: *, plugins: [*]}}
    */
-  static SCSStoCSSModule({env = 'development', filter = '', path = [], extraResources = [], sassResource = [], fileName = ''}) {
+  static SCSStoCSSModule({ env = 'development', filter = '', path = [], extraResources = [], sassResource = [], fileName = '', fastLoader = false }) {
     const postCssLoader = this.creatPostCSSLoader(env);
     // Sass loader setting for css module:
     const extractName = fileName === '' ? '[name].[chunkhash].css' : `${fileName}.[chunkhash].css`;
@@ -333,9 +374,7 @@ module.exports = class Style {
       ignoreOrder: true
     });
 
-    // const extractCSS = new ExtractTextPlugin('[name].[chunkhash].css');
-    const inline = [
-      'style-loader',
+    let loaders = [
       {
         loader: 'css-loader',
         options: {
@@ -345,38 +384,17 @@ module.exports = class Style {
           localIdentName: '[name]__[local]___[hash:base64:5]'
         }
       },
-      postCssLoader,
-      {
-        loader: 'resolve-url-loader'
-      },
-      {
-        loader: 'sass-loader',
-        options: {
-          sourceMap: true,
-          includePaths: extraResources
-        }
-      },
-      {
-        loader: 'sass-resources-loader',
-        options: {
-          resources: sassResource
-        }
-      }
+      postCssLoader
     ];
 
-    const extract = extractCSS.extract({
-      fallback: 'style-loader',
-      use: [
+    if (fastLoader) {
+      loaders = loaders.concat([
         {
-          loader: 'css-loader',
-          options: {
-            sourceMap: env === 'development',
-            modules: true,
-            importLoaders: 2,
-            localIdentName: '[name]__[local]___[hash:base64:5]'
-          }
-        },
-        postCssLoader,
+          loader: 'fast-sass-loader'
+        }
+      ]);
+    } else {
+      loaders = loaders.concat([
         {
           loader: 'resolve-url-loader'
         },
@@ -384,7 +402,6 @@ module.exports = class Style {
           loader: 'sass-loader',
           options: {
             sourceMap: true,
-            sourceMapContents: env === 'development',
             includePaths: extraResources
           }
         },
@@ -394,11 +411,17 @@ module.exports = class Style {
             resources: sassResource
           }
         }
-      ]
+      ]);
+    }
+
+    // const extractCSS = new ExtractTextPlugin('[name].[chunkhash].css');
+    const inline = loaders.unshift('style-loader');
+    const extract = extractCSS.extract({
+      fallback: 'style-loader',
+      use: loaders
     });
 
     let scssLoader;
-
     if (filter === 'exclude') {
       scssLoader = {
         test: /\.scss$/,
@@ -465,7 +488,7 @@ module.exports = class Style {
    *  cssImageRef: '../asset/images/sprite.png'
    * })
    */
-  static addSprite({srcFolder, srcType = '*.png', targetImgFolder, targetSCSSFolder, cssImageRef}) {
+  static addSprite({ srcFolder, srcType = '*.png', targetImgFolder, targetSCSSFolder, cssImageRef }) {
     const spritesmith = new SpritesmithPlugin({
       src: {
         cwd: srcFolder,
