@@ -12,7 +12,7 @@ module.exports = class Util {
    * @param {Boolean} verbose -The controller for output detail.
    * @returns {{devServer: {historyApiFallback: boolean, hot: boolean, inline: boolean, stats: string, host: *, port: *}, plugins: [*]}}
    */
-  static devServer({host = 'localhost', port = 8100, verbose = false}) {
+  static devServer({ host = 'localhost', port = 8100, verbose = false }) {
     return {
       devServer: {
         // Enable history API fallback so HTML5 History API based
@@ -74,7 +74,8 @@ module.exports = class Util {
         new webpack.LoaderOptionsPlugin({
           minimize: true
         }),
-        new webpack.NoEmitOnErrorsPlugin()
+        new webpack.NoEmitOnErrorsPlugin(),
+        new webpack.optimize.DedupePlugin()
       ]
     };
   }
@@ -131,7 +132,7 @@ module.exports = class Util {
    * @param {Array} entries -The path of the js file.
    * @returns {{entry: {}, plugins: [*]}}
    */
-  static extractJSBundle({name = '', entries = []}) {
+  static extractJSBundle({ name = '', entries = [] }) {
     let names = ['manifest'];
     const entry = {};
     if (!name && name.length !== 0 && !entries && entries.length !== 0) {
@@ -146,7 +147,8 @@ module.exports = class Util {
         // Extract bundle and manifest files. Manifest is
         // needed for reliable caching.
         new webpack.optimize.CommonsChunkPlugin({
-          names: names
+          names: names,
+          fileName: '[name].[hash].js'
         })
       ]
     };

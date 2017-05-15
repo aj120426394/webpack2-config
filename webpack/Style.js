@@ -9,17 +9,17 @@
 // import cssnano from 'cssnano';
 // import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
-const cssnext = require('postcss-cssnext');
-const flexibility = require('postcss-flexibility');
-const sorting = require('postcss-sorting');
 const color_rgba_fallback = require('postcss-color-rgba-fallback');
-const opacity = require('postcss-opacity');
-const pseudoelements = require('postcss-pseudoelements');
-const will_change = require('postcss-will-change');
-const prefixerwrap = require('postcss-prefixwrap');
 const cssnano = require('cssnano');
+const cssnext = require('postcss-cssnext');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const flexibility = require('postcss-flexibility');
+const opacity = require('postcss-opacity');
+const prefixerwrap = require('postcss-prefixwrap');
+const pseudoelements = require('postcss-pseudoelements');
+const sorting = require('postcss-sorting');
 const SpritesmithPlugin = require('webpack-spritesmith');
+const will_change = require('postcss-will-change');
 
 module.exports = class Style {
   constructor(prefixerWrap = '') {
@@ -158,7 +158,7 @@ module.exports = class Style {
    * @param {Array} path -The regular expression of exclude path.
    * @param {Array} extraResources -The array of the paths of the external resource you want to include.
    * @param {String} prefixWrap -The prefix for each element in CSS.
-   * @param {Boolean} fastLoader -The controller of using fast-sass-loader.
+   * @param {Boolean} fastLoader -Set true to use fast-sass-loader instead of sass-loader. default false
    * @returns {{module: {rules: [*,*]}}}
    */
 
@@ -254,6 +254,7 @@ module.exports = class Style {
    * @param {Array} extraResources -The array of the paths of the external resource you want to include.
    * @param {String} fileName -The name of the extracted CSS file.
    * @param {String} prefixWrap -The class name that wrap all other element.
+   * @param {Boolean} fastLoader -Set true to use fast-sass-loader instead of sass-loader. default false
    * @returns {{module: {rules: [*,*]}, plugins: [*]}}
    */
   static extractSCSStoCSS({ env = 'production', filter = '', path = [], extraResources = [], fileName = '', prefixWrap = '', fastLoader = false }) {
@@ -362,6 +363,7 @@ module.exports = class Style {
    * @param {Array} extraResources -The array of the paths of the external resource you want to include.
    * @param {Array} sassResource -The sass resource that will attach to all your scss module. ex. variable.scss
    * @param {String} fileName -The file name of the extracted CSS file.
+   * @param {Boolean} fastLoader -Set true to use fast-sass-loader instead of sass-loader. default false
    * @returns {{module: {loaders: [*,*]}, sassLoader: {env: *, includePaths: *}, sassResources: *, plugins: [*]}}
    */
   static SCSStoCSSModule({ env = 'development', filter = '', path = [], extraResources = [], sassResource = [], fileName = '', fastLoader = false }) {

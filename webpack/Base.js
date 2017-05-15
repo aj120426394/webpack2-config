@@ -88,14 +88,14 @@ module.exports = class Base {
             ],
             include: /estoolbox/
           }, {
-            test: /\.(ttf|otf|eot|svg|woff(2)?)(\?v=\d+\.\d+\.\d+)?$/,
+            test: /\.(ttf|otf|eot|svg|woff(2)?|ico)(\?v=\d+\.\d+\.\d+)?$/,
             loader: 'file-loader',
             options: {
               name: '[path][name].[ext]'
             },
             exclude: /(node_modules|bower_components|vendors)/
           }, {
-            test: /\.(ttf|otf|eot|svg|woff(2)?)(\?v=\d+\.\d+\.\d+)?$/,
+            test: /\.(ttf|otf|eot|svg|woff(2)?|ico)(\?v=\d+\.\d+\.\d+)?$/,
             loader: 'file-loader',
             options: {
               name: '/assets/fonts/vendor/[name].[ext]'
