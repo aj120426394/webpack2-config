@@ -74,8 +74,7 @@ module.exports = class Util {
         new webpack.LoaderOptionsPlugin({
           minimize: true
         }),
-        new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.optimize.DedupePlugin()
+        new webpack.NoEmitOnErrorsPlugin()
       ]
     };
   }
