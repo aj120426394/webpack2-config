@@ -105,7 +105,7 @@ module.exports = class Base {
             test: /\.htaccess$/,
             loader: 'file-loader',
             options: {
-              name: '[name].[ext]'
+              name: '[name]'
             }
           }, {
             test: /\.(jpg|JPG|png|gif)$/,

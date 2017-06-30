@@ -96,7 +96,7 @@ module.exports = class React{
             test: /\.htaccess$/,
             loader: 'file-loader',
             options: {
-              name: '[name].[ext]'
+              name: '[name]'
             }
           }, {
             test: /\.(jpg|JPG|png|gif)$/,
