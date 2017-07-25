@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const os = require('os');
 // import webpack from 'webpack'
 // import CleanWebpackPlugin from 'clean-webpack-plugin';
 
@@ -177,5 +178,23 @@ module.exports = class Util {
         providePlugin
       ]
     };
+  }
+
+  /**
+   * Get the ip address of current machine
+   * @returns {string} ip address
+   */
+  static getIPAddress() {
+    const interfaces = os.networkInterfaces();
+    const addresses = [];
+    for (var k in interfaces) {
+      for (var k2 in interfaces[k]) {
+        const address = interfaces[k][k2];
+        if (address.family === 'IPv4' && !address.internal) {
+          addresses.push(address.address);
+        }
+      }
+    }
+    return addresses[0];
   }
 };

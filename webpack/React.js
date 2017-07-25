@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const Util = require('./Util');
 const Style = require('./Style');
 const Lint = require('./Lint');
@@ -16,8 +17,9 @@ module.exports = class React{
    * @param {Object} alias - Alias of the webpack in your application.
    * @param {Number} devServerPort - The port number for dev server.
    * @param {String} htmlPath - The path of the html file of your project.
+   * @param {boolean} localhost - Determine to use localhost or current machine's ip address
    */
-  constructor({ context, entry, outputPath, publicPath, alias, devServerPort = 8100, htmlPath = './index.html' }){
+  constructor({ context, entry, outputPath, publicPath, alias, devServerPort = 8100, htmlPath = './index.html', localhost = true }){
     this.context = context;
     this.entry = entry;
     this.outputPath = outputPath;
@@ -27,6 +29,7 @@ module.exports = class React{
     this.htmlWebpack = new HtmlWebpackPlugin({
       template: htmlPath
     });
+    this.host = localhost ? 'localhost' : Util.getIPAddress();
 
     this.devConfig = this.initialization('development');
     this.prodConfig = this.initialization('production');
@@ -238,7 +241,10 @@ module.exports = class React{
     const config = merge(
       this.devConfig,
       {
-        devtool: 'inline-source-map'
+        devtool: 'inline-source-map',
+        plugins: [
+          new OpenBrowserPlugin({ url: `http://${this.host}:${this.devServerPort}` })
+        ]
       },
       Util.devServer({
         host: 'localhost',
