@@ -135,7 +135,7 @@ module.exports = class Util {
   static extractJSBundle({ name = '', entries = [] }) {
     let names = ['manifest'];
     const entry = {};
-    if (!name && name.length !== 0 && !entries && entries.length !== 0) {
+    if (name && name.length !== 0 && entries && entries.length !== 0) {
       entry[name] = entries;
       names.unshift(name);
     }

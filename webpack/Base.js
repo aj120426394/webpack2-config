@@ -46,7 +46,7 @@ module.exports = class Base {
     if (env === 'development') {
       Object.keys(entries).forEach((key) => {
         entries[key].unshift('webpack/hot/only-dev-server');
-        entries[key].unshift(`webpack-dev-server/client?http://localhost:${this.devServerPort}`);
+        entries[key].unshift(`webpack-dev-server/client?http://${this.host}:${this.devServerPort}`);
       });
     }
 
@@ -183,10 +183,6 @@ module.exports = class Base {
       Util.setEnvironmentVariable({
         NODE_ENV: 'production'
       }),
-      Util.extractJSBundle({
-        name: 'vendor',
-        entries: extractLibrary
-      }),
       Util.optimize()
     );
 
@@ -233,7 +229,7 @@ module.exports = class Base {
         ]
       },
       Util.devServer({
-        host: 'localhost',
+        host: this.host,
         port: this.devServerPort,
         verbose: verbose
       })

@@ -42,7 +42,7 @@ module.exports = class React{
     if (env === 'development') {
       Object.keys(entries).forEach((key) => {
         entries[key].unshift('webpack/hot/only-dev-server');
-        entries[key].unshift(`webpack-dev-server/client?http://localhost:${this.devServerPort}`);
+        entries[key].unshift(`webpack-dev-server/client?http://${this.host}:${this.devServerPort}`);
         entries[key].unshift('react-hot-loader/patch');
       });
     }
@@ -198,10 +198,6 @@ module.exports = class React{
       Util.setEnvironmentVariable({
         NODE_ENV: 'production'
       }),
-      Util.extractJSBundle({
-        name: 'vendor',
-        entries: extractLibrary
-      }),
       Util.optimize()
     );
 
@@ -247,7 +243,7 @@ module.exports = class React{
         ]
       },
       Util.devServer({
-        host: 'localhost',
+        host: this.host,
         port: this.devServerPort,
         verbose: verbose
       })
